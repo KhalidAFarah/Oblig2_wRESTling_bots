@@ -14,16 +14,20 @@ def send_DELETE_Request(URI, data=None):
     response = requests.delete(URI)
     return response.json()
 
+def send_PUT_Request(URI, data=None):
+    response = requests.put(URI, data)
+    return response.json()
+
 #test code checking if user endpoints functions correctly
-user1 = {"name": "Joe"}
-user2 = {"name": "Moe"}
-print(str(send_POST_Request(base_url + "/api/user/0", user1)))
-print()
-print(str(send_POST_Request(base_url + "/api/user/0", user2)))
-print()
+#user1 = {"name": "Joe"}
+#user2 = {"name": "Moe"}
+#print(str(send_POST_Request(base_url + "/api/user/0", user1)))
+#print()
+#print(str(send_POST_Request(base_url + "/api/user/0", user2)))
+#print()
 
-print(str(send_GET_Request(base_url + "/api/users")))
+#print(str(send_GET_Request(base_url + "/api/users")))
 
-send_DELETE_Request(base_url + "/api/user/2")
+#print(send_DELETE_Request(base_url + "/api/user/2"))
 
-print(str(send_GET_Request(base_url + "/api/users")))
+#print(str(send_GET_Request(base_url + "/api/users")))

@@ -8,8 +8,13 @@ users = {}
 counter_users = 0
 
 def abort_if_user_not_exist(userid):# in case a the delete request attempts to delete a empty index
-    print(users.keys())
-    if userid not in  str(users.keys()):
+    #print(users.keys())
+    found = False
+    for ids in users.keys():
+        if userid == ids:
+            found = True
+    
+    if found == False:
         abort(409, message="the user doesn't currently exist")
 
 #endpoint for getting all users
