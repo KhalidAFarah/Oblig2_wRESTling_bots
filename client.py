@@ -19,9 +19,9 @@ def send_PUT_Request(URI, data=None):
     return response.json()
 
 #test code checking if user endpoints functions correctly
-#user1 = {"name": "Joe"}
+user1 = {"name": "Joe"}
 #user2 = {"name": "Moe"}
-#print(str(send_POST_Request(base_url + "/api/user/0", user1)))
+print(str(send_POST_Request(base_url + "/api/user/", user1)))
 #print()
 #print(str(send_POST_Request(base_url + "/api/user/0", user2)))
 #print()

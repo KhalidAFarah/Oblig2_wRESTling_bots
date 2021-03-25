@@ -6,7 +6,7 @@ api = Api(app)
 rooms = {}
 users = {}
 counter_users = 0
-
+#user endpoints
 def abort_if_user_not_exist(userid):# in case a the delete request attempts to delete a empty index
     #print(users.keys())
     found = False
@@ -28,7 +28,7 @@ class User(Resource):
     def get(self, userid):
         return users[userid]
 
-    def post(self, userid):#auto increments id 
+    def post(self, userid=None):#auto increments id 
         global counter_users
         counter_users += 1     
         parser = reqparse.RequestParser()
@@ -50,8 +50,29 @@ class User(Resource):
         users.pop(userid)
         return 200
 
-api.add_resource(User, "/api/user/<int:userid>")#user id should not be needed 
+#endpoint for a specific user for post without userid needed
+class User2(Resource):
 
+    def post(self):#auto increments id 
+        global counter_users
+        counter_users += 1     
+        parser = reqparse.RequestParser()
+        parser.add_argument("name")
+        
+        data = parser.parse_args()
+        
+        
+        self.id = counter_users
+        self.name = data['name']
+        users[counter_users] = self.__dict__
+
+        
+        
+        return self.__dict__
+
+
+api.add_resource(User, "/api/user/<int:userid>")#user id should not be needed 
+api.add_resource(User2, "/api/user/")
 
 
 
