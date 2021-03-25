@@ -17,7 +17,7 @@ def abort_if_user_not_exist(user_id):# in case a the delete request attempts to 
             found = True
     
     if found == False:
-        abort(409, message="the user doesn't currently exist")
+        abort(404, message="the user doesn't currently exist")
 
 #endpoint for getting all users
 class Users(Resource):
