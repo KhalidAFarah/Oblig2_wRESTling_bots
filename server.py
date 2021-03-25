@@ -11,7 +11,6 @@ counter_rooms = 0
 
 #user endpoints
 def abort_if_user_not_exist(user_id):# in case a the delete request attempts to delete a empty index
-    #print(users.keys())
     found = False
     for ids in users.keys():
         if user_id == ids:
@@ -71,7 +70,7 @@ class UserP(Resource):
 
 
 api.add_resource(User, "/api/user/<int:user_id>")#user id should not be needed 
-api.add_resource(UserP, "/api/user/")
+api.add_resource(UserP, "/api/user")
 
 
 
@@ -103,19 +102,16 @@ class RoomP(Resource):
         global counter_rooms
         counter_rooms += 1
 
-        #parser = reqparse.RequestParser()
-        #parser.add_argument()
-
         #making a room dictionary
         room = {
             "id": counter_rooms,
-            "users": [],
-            "messages": []
+            "users": {},
+            "messages": {}
         }
 
         rooms[counter_rooms] = room
         return room
-api.add_resource(RoomP, "/api/room/")
+api.add_resource(RoomP, "/api/room")
 
 
 if __name__ == "__main__":
