@@ -113,6 +113,33 @@ class RoomP(Resource):
         return room
 api.add_resource(RoomP, "/api/room")
 
+#get all users in the room
+class Room_Users(Resource):
+    def get(self, room_id):
+        return rooms[room_id]['users']
+api.add_resource(Room_Users, "/api/room/<int:room_id>/users")
+
+#add a user in the room
+class Room_UsersP(Resource):
+    def post(self, room_id):
+    
+        #require a user id in the header?
+        parser = reqparse.RequestParser()
+        parser.add_argument("id")
+        data = parser.parse_args()
+
+        try:#in case an integer was not passed
+            #check if user is registered
+            abort_if_user_not_exist(int(data['id']))
+        except:
+            abort(404, message="not a valid user id given")
+
+        #adding the user to the room
+        rooms[room_id]['users'][len(rooms[room_id]['users'])]=users[int(data['id'])]
+
+        return rooms[room_id]['users'][len(rooms[room_id]['users'])-1]
+api.add_resource(Room_UsersP, "/api/room/<int:room_id>/user")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

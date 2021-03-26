@@ -75,3 +75,27 @@ print()
 print("Getting the second room")
 print(send_GET_Request(base_url + "room/2"))
 print()
+
+# Testing the room add and get all users endpoints
+print("Getting all users in room 1 should be {}")
+print(send_GET_Request(base_url+ "room/1/users"))
+print()
+
+print("Adding back the sescond user")
+print(str(send_POST_Request(base_url + "user", user2)))
+print()
+
+print("Adding both users to room 1")
+print(send_POST_Request(base_url+ "room/1/user", {"id": 1}))
+print()
+
+print(send_POST_Request(base_url+ "room/1/user", {"id": 3}))# Moes id will be 3 assuming the server just started
+print()
+
+print("Getting all users in room 1 should include both users")
+print(send_GET_Request(base_url+ "room/1/users"))
+print()
+
+print("Getting all users in room 2 should be {}")
+print(send_GET_Request(base_url+ "room/2/users"))
+print()
