@@ -5,8 +5,8 @@ import requests
 # Reminder remove file before handing in
 base_url = "http://127.0.0.1:5000/api/"
 
-def send_GET_Request(URI):
-    response = requests.get(URI)
+def send_GET_Request(URI, data=None):
+    response = requests.get(URI, data)
     return response.json()
 
 def send_POST_Request(URI, data=None):
@@ -89,6 +89,12 @@ print("Adding both users to room 1")
 print(send_POST_Request(base_url+ "room/1/user", {"id": 1}))
 print()
 
+# Testing if moe can get all messages
+print("Getting all messages in room 1 should return an error")
+print(send_GET_Request(base_url+ "room/1/messages", {"user_id": 3}))
+print()
+
+
 print(send_POST_Request(base_url+ "room/1/user", {"id": 3}))# Moes id will be 3 assuming the server just started
 print()
 
@@ -99,3 +105,9 @@ print()
 print("Getting all users in room 2 should be {}")
 print(send_GET_Request(base_url+ "room/2/users"))
 print()
+
+# Testing if moe now can get all messages
+print("Getting all messages in room 1 should return {}")
+print(send_GET_Request(base_url+ "room/1/messages", {"user_id": 3}))
+print()
+

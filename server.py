@@ -149,11 +149,11 @@ class Room_messages(Resource):
         data = parser.parse_args()
         
         for user in rooms[room_id]['users']:
-            if user['id'] == user:
+            if int(user) == int(data['user_id']):
                 return rooms[room_id]['messages']
 
         abort(404, message="the user is not a registered user in the room")
-api.add_resource(Room_UsersP, "/api/room/<int:room_id>/messages")
+api.add_resource(Room_messages, "/api/room/<int:room_id>/messages")
 
 
 
