@@ -140,6 +140,23 @@ class Room_UsersP(Resource):
         return rooms[room_id]['users'][len(rooms[room_id]['users'])-1]
 api.add_resource(Room_UsersP, "/api/room/<int:room_id>/user")
 
+#getting all the messages in a room
+class Room_messages(Resource):
+    def get(self, room_id):
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("user_id")
+        data = parser.parse_args()
+        
+        for user in rooms[room_id]['users']:
+            if user['id'] == user:
+                return rooms[room_id]['messages']
+
+        abort(404, message="the user is not a registered user in the room")
+api.add_resource(Room_UsersP, "/api/room/<int:room_id>/messages")
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
