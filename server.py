@@ -155,7 +155,38 @@ class Room_messages(Resource):
         abort(404, message="the user is not a registered user in the room")
 api.add_resource(Room_messages, "/api/room/<int:room_id>/messages")
 
+#get all of a specific users message or add a user message
+class Room_messages(Resource):
+    def get(self, room_id, user_id):
 
+        parser = reqparse.RequestParser()
+        parser.add_argument("user_id")
+        data = parser.parse_args()
+        
+        for user in rooms[room_id]['users']:
+            if int(user) == int(data['user_id']):
+                return rooms[room_id]['messages']
+
+        abort(404, message="the user is not a registered user in the room")
+    
+    def post(self, room_id, user_id):
+        parser = reqparse.RequestParser()
+        #parser.add_argument("user_id")
+        #parser.add_argument("username")
+        parser.add_argument("message")
+        data = parser.parse_args()
+
+        message = {
+            "user_id": user_id,
+            "username": users[user_id],
+            "message": data['message']
+        }
+
+        rooms[room_id]['message'][len(rooms[room_id]['message'])-1] = message
+        return 200
+
+
+api.add_resource(Room_messages, "/api/room/<room-id>/<user-id>/messages") 
 
 
 if __name__ == "__main__":
