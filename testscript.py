@@ -2,6 +2,8 @@ import requests
 # This skript is meant to quickly set up test and check for error
 # Feel free to mess around and change values
 
+#print("\U0001F923")
+
 # Reminder remove file before handing in
 base_url = "http://127.0.0.1:5000/api/"
 
@@ -111,3 +113,6 @@ print("Getting all messages in room 1 should return {}")
 print(send_GET_Request(base_url+ "room/1/messages", {"user_id": 3}))
 print()
 
+#print("Posting a message to the room")
+#print(send_POST_Request(base_url+ "room/1/messages", {"user_id": 3}))
+#print()
