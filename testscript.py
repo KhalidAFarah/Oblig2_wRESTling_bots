@@ -2,7 +2,7 @@ import requests
 # This skript is meant to quickly set up test and check for error
 # Feel free to mess around and change values
 
-print("\U0001F923")
+#print("\U0001F923")
 
 # Reminder remove file before handing in
 base_url = "http://127.0.0.1:5000/api/"
