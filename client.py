@@ -9,8 +9,18 @@ base_url = "http://127.0.0.1:5000/api/"
 Bot=["Jarvis","Stark","Parker","Prime"]
 
 greetings_list=["hi","hello","hey"]
-Actions=["read","run","Train","work"]
+Activities=["read","run","Train","work"]
 exit_list=["exit","see you later","bye","quit"]
+
+def Jarvis(action):
+    if action in greetings_list:
+        return"{}: {} Hey Boss!"
+    elif action in Activities:
+        return "{}: {} sound like a great idea Boss!".format(alias,action+"ing")
+    elif action in exit_list:
+        return "{}: {} see you soon Boss"
+    else:
+        return "i didnt understand what you meant"
 
 def send_GET_Request(URI):
     response = requests.get(URI)
