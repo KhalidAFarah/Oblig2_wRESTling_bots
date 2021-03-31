@@ -152,15 +152,15 @@ class Room_messages(Resource):
         parser.add_argument("user_id")
         data = parser.parse_args()
         
-        for user in rooms[room_id]['users']:
-            if int(user) == int(data['user_id']):
+        for user in rooms[room_id]['users'].values():
+            if int(user['id']) == int(data['user_id']):
                 return rooms[room_id]['messages']
 
         abort(404, message="the user is not a registered user in the room")
 api.add_resource(Room_messages, "/api/room/<int:room_id>/messages")
 
 #get all of a specific users message or add a user message
-class Room_messages(Resource):
+class Room_messages_specified(Resource):
     def get(self, room_id, user_id):
 
         parser = reqparse.RequestParser()
@@ -182,15 +182,15 @@ class Room_messages(Resource):
 
         message = {
             "user_id": user_id,
-            "username": users[user_id],
+            "username": users[int(user_id)],
             "message": data['message']
         }
 
-        rooms[room_id]['message'][len(rooms[room_id]['message'])-1] = message
+        rooms[int(room_id)]['messages'][len(rooms[int(room_id)]['messages'])] = message
         return 200
 
 
-api.add_resource(Room_messages, "/api/room/<room-id>/<user-id>/messages") 
+api.add_resource(Room_messages_specified, "/api/room/<room_id>/<user_id>/messages") 
 
 
 if __name__ == "__main__":
