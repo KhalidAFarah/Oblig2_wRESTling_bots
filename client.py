@@ -32,6 +32,28 @@ def Stark(action):
     else:
         return "what do you mean?"
 
+def Parker(action):
+    if action in greetings_list:
+        return"{}  Hello mate!"
+    elif action in Activities:
+        return"{} im bussy right now maybe later"
+    elif action in exit_list:
+        return "{} see you soon"
+    else:
+        return "what?
+
+def Parker(action):
+    if action in greetings_list:
+        return"{}  Hi!"
+    elif action in Activities:
+        return"{} Not interested"
+    elif action in exit_list:
+        return "{} bye"
+    else:
+        return "..."
+
+
+
 def send_GET_Request(URI):
     response = requests.get(URI)
     return response.json()
