@@ -178,11 +178,11 @@ class Room_messages_specified(Resource):
 
         message = {
             "user_id": user_id,
-            "username": users[user_id],
+            "username": users[int(user_id)],
             "message": data['message']
         }
 
-        rooms[room_id]['message'][len(rooms[room_id]['message'])-1] = message
+        rooms[int(room_id)]['messages'][len(rooms[int(room_id)]['messages'])] = message
         return 200
 
 
