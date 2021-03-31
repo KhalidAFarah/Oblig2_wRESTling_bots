@@ -1,7 +1,8 @@
 import requests
+import socket
 
 Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-Socket.connect(('localhost' 4242))
+Socket.connect(('localhost', 4242))
 
 base_url = "http://127.0.0.1:5000/api/"
 
