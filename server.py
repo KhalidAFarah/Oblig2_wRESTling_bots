@@ -1,5 +1,9 @@
-from flask import Flask   
+from flask import Flask    
 from flask_restful import Api, Resource, reqparse, abort
+
+Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+Socket.bind('0.0.0.0' port 4242)
+socket.listen(4)
 
 app = Flask(__name__)
 api = Api(app)
