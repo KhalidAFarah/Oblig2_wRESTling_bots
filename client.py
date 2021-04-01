@@ -1,10 +1,12 @@
 import requests
 import socket
 import random
+import json
 
 
-Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-Socket.connect(('localhost', 4242))
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+socket.connect(("localhost", 4242))
+
 base_url = "http://127.0.0.1:5000/api/"
 botname = ""
 botID = -1
@@ -110,6 +112,13 @@ def start_up():
     for room in response:
         if random.randint(1,5) < 4: # 1/5 chance of not joining the room
             join_a_room(room['room_id'], botID)
+
+def run():                  # Push notification
+    global botname, botID   # It will always be an endpoint to a given room
+    while True:             # For example /api/room/1/messages
+        data = socket.recv(1024).decode()
+        response = send_GET_Request(data, {"user_id": botID})
+
             
 
 
