@@ -1,13 +1,10 @@
 import requests
 import socket
-
-
-
+user=input('Choose an User')
 
 Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 Socket.connect(('localhost', 4242))
 base_url = "http://127.0.0.1:5000/api/"
-botname = "Stark"
 botID = -1
 
 Bot=["Jarvis","Stark","Parker","Prime"]
@@ -36,8 +33,6 @@ def Stark(action):
     else:
         return "what do you mean?"
 
-<<<<<<< Updated upstream
-=======
 def Prime(action):
     if action in greetings_list:
         return"{}  Hello mate!"
@@ -58,9 +53,23 @@ def Parker(action):
     else:
         return "..."
 
+def receive();
+    while True:
+        message = client.recv(1024).decode('utf-8')
+        if message =="user?":
+            client.send(user.encode('utf-8'))
+        
+        else:
+            if ":" in message:
+                
+                hilsen = message.split(":")
+                if hilsen[0] not in 
 
 
->>>>>>> Stashed changes
+
+
+
+
 def send_GET_Request(URI):
     response = requests.get(URI)
     return response.json()
