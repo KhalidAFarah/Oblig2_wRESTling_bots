@@ -79,17 +79,17 @@ def send_PUT_Request(URI, data=None):
 def send_message(message, room_id):
     send_POST_Request(base_url+ "room/{}/{}/messages".format(room_id, botID), {"message": message})
 
-def get_all_messages(room_id):
-    return send_GET_Request(base_url+ "room/{}/messages".format(room_id), {"user_id": 1})
+def get_all_messages(room_id, ID):
+    return send_GET_Request(base_url+ "room/{}/messages".format(room_id), {"user_id": ID})
 
 def create_room():
-    send_POST_Request(base_url + "room")
+    return send_POST_Request(base_url + "room")
 
 def get_all_rooms():
     return send_GET_Request(base_url + "rooms")
 
 def start_up():
-    #registering a new client
+    # Registering a new client
     global botname, botID
     print("available bots: ", end="")
     print(*bots, sep=", ")
@@ -100,3 +100,12 @@ def start_up():
     response = send_POST_Request(base_url + "user", user)
     botID = response['id']
     
+    # create a room
+    create_room()
+
+    #join the created rooms
+
+    response = get_all_rooms()
+    for room in response:
+        pass
+
