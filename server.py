@@ -1,6 +1,7 @@
 from flask import Flask    
 from flask_restful import Api, Resource, reqparse, abort
 import socket
+clients=[]
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.bind(('0.0.0.0', 4242))
@@ -9,7 +10,10 @@ socket.listen(4)
 def accept_Sockets():
     while True:
         clientsocket = socket.accept()
-        print("A fellow bot joined")   #new connection 
+        print("A fellow bot joined")   #new connection
+        clients.append(clientsocket)    #adds a client
+        
+         
                               
 
 app = Flask(__name__)
