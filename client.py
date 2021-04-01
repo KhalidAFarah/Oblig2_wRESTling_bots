@@ -10,7 +10,7 @@ base_url = "http://127.0.0.1:5000/api/"
 botname = "Stark"
 botID = -1
 
-Bot=["Jarvis","Stark","Parker","Prime"]
+bots=["Jarvis","Stark","Parker","Prime"]
 
 greetings_list=["hi","hello","hey"]
 Activities=["read","run","Train","work"]
@@ -36,8 +36,6 @@ def Stark(action):
     else:
         return "what do you mean?"
 
-<<<<<<< Updated upstream
-=======
 def Prime(action):
     if action in greetings_list:
         return"{}  Hello mate!"
@@ -60,7 +58,6 @@ def Parker(action):
 
 
 
->>>>>>> Stashed changes
 def send_GET_Request(URI):
     response = requests.get(URI)
     return response.json()
@@ -90,3 +87,16 @@ def create_room():
 
 def get_all_rooms():
     return send_GET_Request(base_url + "rooms")
+
+def start_up():
+    #registering a new client
+    global botname, botID
+    print("available bots: ", end="")
+    print(*bots, sep=", ")
+    while botname not in bots:
+        botname = input("choose a bot: ")
+    
+    user = {"name": botname}
+    response = send_POST_Request(base_url + "user", user)
+    botID = response['id']
+    
