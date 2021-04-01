@@ -50,7 +50,7 @@ class User(Resource):
         data = parser.parse_args()
         
         #is id needed?
-        self.id = counter_users
+        self.user_id = counter_users
         self.name = data['name']
         users[counter_users] = self.__dict__
 
@@ -73,7 +73,7 @@ class UserP(Resource):
         parser.add_argument("name")
         data = parser.parse_args()
         
-        self.id = counter_users
+        self.user_id = counter_users
         self.name = data['name']
         users[counter_users] = self.__dict__
         
@@ -115,7 +115,7 @@ class RoomP(Resource):
 
         #making a room dictionary
         room = {
-            "id": counter_rooms,
+            "room_id": counter_rooms,
             "users": {},
             "messages": {}
         }
@@ -136,12 +136,12 @@ class Room_UsersP(Resource):
     
         #require a user id in the header?
         parser = reqparse.RequestParser()
-        parser.add_argument("id")
+        parser.add_argument("user_id")
         data = parser.parse_args()
 
         try:#in case an integer was not passed
             #check if user is registered
-            abort_if_user_not_exist(int(data['id']))
+            abort_if_user_not_exist(int(data['user_id']))
         except:
             abort(404, message="not a valid user id given")
 
@@ -160,7 +160,7 @@ class Room_messages(Resource):
         data = parser.parse_args()
         
         for user in rooms[room_id]['users'].values():
-            if int(user['id']) == int(data['user_id']):
+            if int(user['User_id']) == int(data['user_id']):
                 return rooms[room_id]['messages']
 
         abort(404, message="the user is not a registered user in the room")
