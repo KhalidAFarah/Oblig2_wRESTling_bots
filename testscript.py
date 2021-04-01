@@ -88,7 +88,7 @@ print(str(send_POST_Request(base_url + "user", user2)))
 print()
 
 print("Adding both users to room 1")
-print(send_POST_Request(base_url+ "room/1/user", {"id": 1}))
+print(send_POST_Request(base_url+ "room/1/user", {"user_id": 1}))
 print()
 
 # Testing if moe can get all messages
@@ -97,7 +97,7 @@ print(send_GET_Request(base_url+ "room/1/messages", {"user_id": 3}))
 print()
 
 
-print(send_POST_Request(base_url+ "room/1/user", {"id": 3}))# Moes id will be 3 assuming the server just started
+print(send_POST_Request(base_url+ "room/1/user", {"user_id": 3}))# Moes id will be 3 assuming the server just started
 print()
 
 print("Getting all users in room 1 should include both users")
