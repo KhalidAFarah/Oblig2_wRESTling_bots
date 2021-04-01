@@ -7,14 +7,16 @@ socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.bind(('0.0.0.0', 4242))
 socket.listen(4)
 
+
+
 def accept_Sockets():
     while True:
         clientsocket = socket.accept()
         print("A fellow bot joined")   #new connection
         clients.append(clientsocket)    #adds a client
         
-         
-                              
+ accept_socket_thread = threading.Thread()   
+ accept_socket_thread.start()                          
 
 app = Flask(__name__)
 api = Api(app)
