@@ -36,8 +36,6 @@ def Stark(action):
     else:
         return "what do you mean?"
 
-<<<<<<< Updated upstream
-=======
 def Prime(action):
     if action in greetings_list:
         return"{}  Hello mate!"
@@ -60,7 +58,6 @@ def Parker(action):
 
 
 
->>>>>>> Stashed changes
 def send_GET_Request(URI):
     response = requests.get(URI)
     return response.json()
