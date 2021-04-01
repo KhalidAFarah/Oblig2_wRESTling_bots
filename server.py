@@ -18,7 +18,7 @@ def accept_Sockets():
 accept_socket_thread = threading.Thread()
 accept_socket_thread.start()                          
 
-app = Flask(__name__)
+app = Flask(__name__) 
 api = Api(app)
 rooms = {}
 users = {}
