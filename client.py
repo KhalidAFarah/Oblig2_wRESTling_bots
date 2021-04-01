@@ -1,6 +1,6 @@
 import requests
 import socket
-user=input('Choose an User')
+
 
 Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 Socket.connect(('localhost', 4242))
