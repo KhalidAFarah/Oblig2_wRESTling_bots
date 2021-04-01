@@ -1,10 +1,12 @@
 import requests
 import socket
+import random
 
 
 Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 Socket.connect(('localhost', 4242))
 base_url = "http://127.0.0.1:5000/api/"
+botname = ""
 botID = -1
 
 bots=["Jarvis","Stark","Parker","Prime"]
@@ -84,6 +86,9 @@ def create_room():
 def get_all_rooms():
     return send_GET_Request(base_url + "rooms")
 
+def join_a_room(room_id, user_id):
+    send_POST_Request(base_url+ "room/{}/user".format(room_id), {"user_id": user_id})
+
 def start_up():
     # Registering a new client
     global botname, botID
@@ -94,7 +99,7 @@ def start_up():
     
     user = {"name": botname}
     response = send_POST_Request(base_url + "user", user)
-    botID = response['id']
+    botID = response['user_id']
     
     # create a room
     create_room()
@@ -103,5 +108,11 @@ def start_up():
 
     response = get_all_rooms()
     for room in response:
-        pass
+        if random.randint(1,5) < 4: # 1/5 chance of not joining the room
+            join_a_room(room['room_id'], botID)
+            
+
+
+
+
 
