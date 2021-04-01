@@ -17,9 +17,13 @@ def accept_Sockets():
         clientsocket = socket.accept()
         print("A fellow bot joined")   #new connection
         clients.append(clientsocket)    #adds a client
+
+def broadcast(endpoint):
+    for client in clients:
+        client.send(endpoint.encode())
         
 accept_socket_thread = threading.Thread(target=accept_Sockets)
-accept_socket_thread.start()                          
+                          
 
 app = Flask(__name__)
 api = Api(app)
@@ -203,6 +207,8 @@ class Room_messages_specified(Resource):
         }
 
         rooms[int(room_id)]['messages'][len(rooms[int(room_id)]['messages'])] = message
+
+        broadcast("/api/room/{}/messages".format(room_id))
         return 200
 
 
@@ -210,6 +216,7 @@ api.add_resource(Room_messages_specified, "/api/room/<room_id>/<user_id>/message
 
 
 if __name__ == "__main__":
+    accept_socket_thread.start()
     app.run(debug=True)
 
 

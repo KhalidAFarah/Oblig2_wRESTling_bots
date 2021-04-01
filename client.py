@@ -58,8 +58,8 @@ def Parker(action):
         return "..."
 
 
-def send_GET_Request(URI):
-    response = requests.get(URI)
+def send_GET_Request(URI, data=None):
+    response = requests.get(URI,data)
     return response.json()
     
 def send_POST_Request(URI, data=None):
@@ -113,11 +113,16 @@ def start_up():
         if random.randint(1,5) < 4: # 1/5 chance of not joining the room
             join_a_room(room['room_id'], botID)
 
+    
+
 def run():                  # Push notification
     global botname, botID   # It will always be an endpoint to a given room
     while True:             # For example /api/room/1/messages
-        data = socket.recv(1024).decode()
-        response = send_GET_Request(data, {"user_id": botID})
+        endpoint = socket.recv(1024).decode()
+        response = send_GET_Request(endpoint, {"user_id": botID})
+
+start_up()
+run()
 
             
 
