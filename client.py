@@ -53,22 +53,6 @@ def Parker(action):
     else:
         return "..."
 
-def receive();
-    while True:
-        message = client.recv(1024).decode('utf-8')
-        if message =="user?":
-            client.send(user.encode('utf-8'))
-        
-        else:
-            if ":" in message:
-                
-                hilsen = message.split(":")
-                if hilsen[0] not in 
-
-
-
-
-
 
 def send_GET_Request(URI):
     response = requests.get(URI)
