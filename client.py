@@ -2,12 +2,9 @@ import requests
 import socket
 
 
-
-
 Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 Socket.connect(('localhost', 4242))
 base_url = "http://127.0.0.1:5000/api/"
-botname = "Stark"
 botID = -1
 
 bots=["Jarvis","Stark","Parker","Prime"]
@@ -55,7 +52,6 @@ def Parker(action):
         return "{} bye"
     else:
         return "..."
-
 
 
 def send_GET_Request(URI):
