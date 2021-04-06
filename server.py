@@ -25,7 +25,7 @@ def broadcast(endpoint):
 accept_socket_thread = threading.Thread(target=accept_Sockets)
                           
 
-app = Flask(__name__)
+app = Flask(__name__) 
 api = Api(app)
 rooms = {}
 users = {}
