@@ -4,26 +4,7 @@ import socket
 import threading
 import json
 
-clients=[]
-
-socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-def accept_Sockets():
-    socket.bind(("0.0.0.0", 4242))
-    socket.listen(4)
-    
-    while True:
-        print("Waiting")
-        clientsocket = socket.accept()
-        print("A fellow bot joined")   #new connection
-        clients.append(clientsocket)    #adds a client
-
-def broadcast(endpoint):
-    for client in clients:
-        client.send(endpoint.encode())
-        
-accept_socket_thread = threading.Thread(target=accept_Sockets)
-                          
+clients=[]                  
 
 app = Flask(__name__) 
 api = Api(app)
@@ -32,6 +13,31 @@ users = {}
 
 counter_users = 0
 counter_rooms = 0
+
+def accept_Sockets():
+    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    serversocket.bind(("0.0.0.0", 4242))
+    serversocket.listen(4)
+    
+    while True:
+        print("Waiting")
+        clientsocket = serversocket.accept()
+        print("A fellow bot joined")   #new connection
+        data = clientsocket.recv(1024).decode()
+        data = json.loads(data)
+
+        users[data['user_id']]['socket'] = clientsocket
+        #clients.append(clientsocket)    #adds a client
+
+def broadcast(room_id):
+    for user in rooms[room_id]['users']:
+        if user['socket'] is not None:
+            endpoint = "/api/room/{}/messages".format(room_id)
+            user['socket'].send(endpoint.encode())
+        
+accept_socket_thread = threading.Thread(target=accept_Sockets)
+
+        
 
 #user endpoints
 def abort_if_user_not_exist(user_id):# in case a the delete request attempts to delete a empty index
@@ -54,7 +60,7 @@ class User(Resource):
     def get(self, user_id):
         return users[user_id]
 
-    def post(self, user_id=None):#auto increments id 
+    def post(self, user_id=None):# Auto increments id 
         global counter_users
         counter_users += 1     
         parser = reqparse.RequestParser()
@@ -65,6 +71,7 @@ class User(Resource):
         #is id needed?
         self.user_id = counter_users
         self.name = data['name']
+        self.socket = None # The socket of the client will not be none if they have push notification
         users[counter_users] = self.__dict__
 
         
@@ -80,6 +87,11 @@ class User(Resource):
 class UserP(Resource):
     def post(self):#auto increments id 
         global counter_users
+
+        accept_socket_thread.start()
+        print(accept_socket_thread.is_alive())
+        if accept_socket_thread.is_alive() == False:
+            accept_socket_thread.start()
         counter_users += 1     
 
         parser = reqparse.RequestParser()
@@ -88,6 +100,7 @@ class UserP(Resource):
         
         self.user_id = counter_users
         self.name = data['name']
+        self.socket = None # The socket of the client will not be none if they have push notification
         users[counter_users] = self.__dict__
         
         return self.__dict__
@@ -208,15 +221,17 @@ class Room_messages_specified(Resource):
 
         rooms[int(room_id)]['messages'][len(rooms[int(room_id)]['messages'])] = message
 
-        broadcast("/api/room/{}/messages".format(room_id))
+        broadcast(room_id)
         return 200
 
 
-api.add_resource(Room_messages_specified, "/api/room/<room_id>/<user_id>/messages") 
+api.add_resource(Room_messages_specified, "/api/room/<room_id>/<user_id>/messages")
 
 
 if __name__ == "__main__":
-    accept_socket_thread.start()
+    #accept_socket_thread.daemon = True
+    #accept_socket_thread.start()
+    
     app.run(debug=True)
 
 

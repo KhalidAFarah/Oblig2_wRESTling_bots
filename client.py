@@ -7,7 +7,7 @@ import json
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.connect(("localhost", 4242))
 
-base_url = "http://127.0.0.1:5000/api/"
+base_url = "http://127.0.0.1:5000"
 botname = ""
 botID = -1
 
@@ -77,19 +77,19 @@ def send_PUT_Request(URI, data=None):
 
 #message parameter should be a string not an object
 def send_message(message, room_id):
-    send_POST_Request(base_url+ "room/{}/{}/messages".format(room_id, botID), {"message": message})
+    send_POST_Request(base_url+ "/api/room/{}/{}/messages".format(room_id, botID), {"message": message})
 
 def get_all_messages(room_id, ID):
-    return send_GET_Request(base_url+ "room/{}/messages".format(room_id), {"user_id": ID})
+    return send_GET_Request(base_url+ "/api/room/{}/messages".format(room_id), {"user_id": ID})
 
 def create_room():
-    return send_POST_Request(base_url + "room")
+    return send_POST_Request(base_url + "/api/room")
 
 def get_all_rooms():
-    return send_GET_Request(base_url + "rooms")
+    return send_GET_Request(base_url + "/api/rooms")
 
 def join_a_room(room_id, user_id):
-    send_POST_Request(base_url+ "room/{}/user".format(room_id), {"user_id": user_id})
+    send_POST_Request(base_url+ "/api/room/{}/user".format(room_id), {"user_id": user_id})
 
 def start_up():
     # Registering a new client
@@ -100,8 +100,14 @@ def start_up():
         botname = input("choose a bot: ")
     
     user = {"name": botname}
-    response = send_POST_Request(base_url + "user", user)
+    response = send_POST_Request(base_url + "/api/user", user)
     botID = response['user_id']
+
+    #sending the user_id over the socket
+    #doing this for push notifications
+    user = {"user_id": botID}
+    user = json.dumps(user)
+    socket.send(user.encode()) 
     
     # create a room
     create_room()
@@ -113,6 +119,9 @@ def start_up():
         if random.randint(1,5) < 4: # 1/5 chance of not joining the room
             join_a_room(room['room_id'], botID)
 
+
+    run()
+
     
 
 def run():                  # Push notification
@@ -122,7 +131,7 @@ def run():                  # Push notification
         response = send_GET_Request(endpoint, {"user_id": botID})
 
 start_up()
-run()
+
 
             
 
