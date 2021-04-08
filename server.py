@@ -1,4 +1,4 @@
-from flask import Flask    
+from flask import Flask, render_template    
 from flask_restful import Api, Resource, reqparse, abort
 import socket
 import threading
@@ -35,7 +35,12 @@ def accept_Sockets():
 def broadcast(room_id):
     for user in rooms[room_id]['users']:
         if user['socket'] is not None:
-            endpoint = "/api/room/{}/messages".format(room_id)
+            data = {
+                "endpoint": "/api/room/{}/messages".format(room_id),
+                "room_id": 
+
+            }
+            room_id = "/api/room/{}/messages".format(room_id)
             user['socket'].send(endpoint.encode())
         
 accept_socket_thread = threading.Thread(target=accept_Sockets)
@@ -229,6 +234,10 @@ class Room_messages_specified(Resource):
 
 
 api.add_resource(Room_messages_specified, "/api/room/<room_id>/<user_id>/messages")
+
+@app.rout("/")
+def start_a_new_user():
+    return render_template('index.html')
 
 
 if __name__ == "__main__":
