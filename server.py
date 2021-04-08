@@ -13,18 +13,21 @@ users = {}
 
 counter_users = 0
 counter_rooms = 0
+serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serversocket.bind(("127.0.0.1", 4242))
 
 def accept_Sockets():
-    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    serversocket.bind(("0.0.0.0", 4242))
+
     serversocket.listen(4)
     
     while True:
         print("Waiting")
-        clientsocket = serversocket.accept()
+        clientsocket, addr = serversocket.accept()
         print("A fellow bot joined")   #new connection
         data = clientsocket.recv(1024).decode()
         data = json.loads(data)
+
+        print(str(data))
 
         users[data['user_id']]['socket'] = clientsocket
         #clients.append(clientsocket)    #adds a client
@@ -89,9 +92,9 @@ class UserP(Resource):
         global counter_users
 
         accept_socket_thread.start()
-        print(accept_socket_thread.is_alive())
-        if accept_socket_thread.is_alive() == False:
-            accept_socket_thread.start()
+        #print(accept_socket_thread.is_alive())
+        #if accept_socket_thread.is_alive() == False:
+        #    accept_socket_thread.start()
         counter_users += 1     
 
         parser = reqparse.RequestParser()

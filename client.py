@@ -17,6 +17,12 @@ greetings_list=["hi","hello","hey"]
 Activities=["read","run","Train","work"]
 exit_list=["exit","see you later","bye","quit"]
 
+rooms={}
+
+# Lets the bot get notified when they should get all mesages from a room 
+# Note: turning this off means the bot will attempt to fetch message each minute
+push_notification = False
+
 def Jarvis(action):
     if action in greetings_list:
         return"{} Hey Boss!"
@@ -91,6 +97,10 @@ def get_all_rooms():
 def join_a_room(room_id, user_id):
     send_POST_Request(base_url+ "/api/room/{}/user".format(room_id), {"user_id": user_id})
 
+def print_new_messages(messages):
+    for message_id in messages.keys():
+        print()
+
 def start_up():
     # Registering a new client
     global botname, botID
@@ -105,9 +115,10 @@ def start_up():
 
     #sending the user_id over the socket
     #doing this for push notifications
-    user = {"user_id": botID}
-    user = json.dumps(user)
-    socket.send(user.encode()) 
+    if push_notification:
+        user = {"user_id": botID}
+        user = json.dumps(user)
+        socket.send(user.encode()) 
     
     # create a room
     create_room()
@@ -116,9 +127,16 @@ def start_up():
 
     response = get_all_rooms()
     for room in response:
-        if random.randint(1,5) < 4: # 1/5 chance of not joining the room
-            join_a_room(room['room_id'], botID)
 
+        if random.randint(1,5) < 4 and push_notification: # 1/5 chance of not joining the room
+            join_a_room(room['room_id'], botID)
+        elif push_notification == False:# If push notification is off the bot will always join
+        
+            join_a_room(room['room_id'], botID)
+            room = {
+                "last_user_message": "",
+            }
+            rooms[room['room_id']] = room
 
     run()
 
@@ -127,8 +145,12 @@ def start_up():
 def run():                  # Push notification
     global botname, botID   # It will always be an endpoint to a given room
     while True:             # For example /api/room/1/messages
-        endpoint = socket.recv(1024).decode()
-        response = send_GET_Request(endpoint, {"user_id": botID})
+        if push_notification:
+            endpoint = socket.recv(1024).decode()
+            response = send_GET_Request(endpoint, {"user_id": botID})
+
+            pe
+        
 
 start_up()
 
