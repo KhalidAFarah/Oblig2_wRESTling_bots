@@ -5,7 +5,6 @@ import threading
 import json
 
 clients=[]
-
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 def accept_Sockets():
