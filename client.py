@@ -107,7 +107,15 @@ def print_new_messages(messages, room_id):
             print(str(messages[message_id])) #printing new messages
             rooms[room_id]['last_message'] = messages[message_id]['message']
             if messages[message_id]['username'] not in bots:
-                pass #bot responds to message
+                #bot responds to messages from non bots
+                if botname == bots[0]:# Jarvis
+                    send_message(Jarvis(), room_id)
+                if botname == bots[1]:# Stark
+                    send_message(Stark(), room_id)
+                if botname == bots[2]:# Parker
+                    send_message(Parker(), room_id)
+                if botname == bots[3]:# Prime
+                    send_message(Prime(), room_id)
 
         #if rooms[room_id]['last_message'] == "":
         #    new_messages=True
@@ -160,7 +168,7 @@ def start_up():
         
             join_a_room(room['room_id'], botID)
             chatroom = {
-                "last_user_message": "",
+                #"last_user_message": "",
                 #"room_id": room['room_id']
                 "messages_gotten": 0
             }
