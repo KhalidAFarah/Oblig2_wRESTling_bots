@@ -2,6 +2,8 @@ import requests
 # This skript is meant to quickly set up test and check for error
 # Feel free to mess around and change values
 
+print("\U0001F923")
+
 # Reminder remove file before handing in
 base_url = "http://127.0.0.1:5000/api/"
 
@@ -86,7 +88,7 @@ print(str(send_POST_Request(base_url + "user", user2)))
 print()
 
 print("Adding both users to room 1")
-print(send_POST_Request(base_url+ "room/1/user", {"id": 1}))
+print(send_POST_Request(base_url+ "room/1/user", {"user_id": 1}))
 print()
 
 # Testing if moe can get all messages
@@ -95,7 +97,7 @@ print(send_GET_Request(base_url+ "room/1/messages", {"user_id": 3}))
 print()
 
 
-print(send_POST_Request(base_url+ "room/1/user", {"id": 3}))# Moes id will be 3 assuming the server just started
+print(send_POST_Request(base_url+ "room/1/user", {"user_id": 3}))# Moes id will be 3 assuming the server just started
 print()
 
 print("Getting all users in room 1 should include both users")
@@ -111,3 +113,18 @@ print("Getting all messages in room 1 should return {}")
 print(send_GET_Request(base_url+ "room/1/messages", {"user_id": 3}))
 print()
 
+print("Posting a message to the room")
+print(send_POST_Request(base_url+ "room/1/3/messages", {"message":"helllplp!"}))
+print()
+
+print("Getting all messages in room 1 should return moes message")
+print(send_GET_Request(base_url+ "room/1/messages", {"user_id": 3}))
+print()
+
+print("Posting a message to the room")
+print(send_POST_Request(base_url+ "room/1/1/messages", {"message":"no i wont"}))
+print()
+
+print("Getting all messages in room 1 should return moe and joes message")
+print(send_GET_Request(base_url+ "room/1/messages", {"user_id": 1}))
+print()
