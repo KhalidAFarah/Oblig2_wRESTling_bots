@@ -35,13 +35,7 @@ def accept_Sockets():
 def broadcast(room_id):
     for user in rooms[room_id]['users']:
         if user['socket'] is not None:
-            data = {
-                "endpoint": "/api/room/{}/messages".format(room_id),
-                "room_id": 
-
-            }
-            room_id = "/api/room/{}/messages".format(room_id)
-            user['socket'].send(endpoint.encode())
+            user['socket'].send(room_id.encode())
         
 accept_socket_thread = threading.Thread(target=accept_Sockets)
 
