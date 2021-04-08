@@ -194,10 +194,6 @@ def run():                  # Push notification
                 if len(response.keys()) > rooms[room_id]['messages_gotten']:
                     print_new_messages(response, room_id)
 
-
-            
-        
-
 start_up()
 
 

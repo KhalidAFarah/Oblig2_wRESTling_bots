@@ -14,10 +14,10 @@ users = {}
 counter_users = 0
 counter_rooms = 0
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#serversocket.bind(("127.0.0.1", 4242))
+
 
 def accept_Sockets():
-
+    serversocket.bind(("127.0.0.1", 4242))
     serversocket.listen(4)
     
     while True:
