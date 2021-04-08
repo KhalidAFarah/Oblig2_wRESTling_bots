@@ -217,7 +217,7 @@ class Room_messages_specified(Resource):
 
         message = {
             "user_id": user_id,
-            "username": users[int(user_id)],
+            "username": users[int(user_id)['name']],
             "message": data['message']
         }
 

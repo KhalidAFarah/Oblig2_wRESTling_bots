@@ -99,24 +99,33 @@ def join_a_room(room_id, user_id):
     send_POST_Request(base_url+ "/api/room/{}/user".format(room_id), {"user_id": user_id})
 
 def print_new_messages(messages, room_id):
-    new_messages = False
+    #new_messages = False
+    counter = 0
     for message_id in messages.keys():
-        if rooms[room_id]['last_message'] == "":
-            new_messages=True
+        
+        if counter > rooms[room_id]['messages_gotten']:
             print(str(messages[message_id])) #printing new messages
             rooms[room_id]['last_message'] = messages[message_id]['message']
             if messages[message_id]['username'] not in bots:
                 pass #bot responds to message
 
-        elif new_messages == False and messages[message_id]['message'] == rooms[room_id]['last_message']:
-            new_messages = True
+        #if rooms[room_id]['last_message'] == "":
+        #    new_messages=True
+        #    print(str(messages[message_id])) #printing new messages
+        #    rooms[room_id]['last_message'] = messages[message_id]['message']
+        #    if messages[message_id]['username'] not in bots:
+        #        pass #bot responds to message
+
+        #elif new_messages == False and messages[message_id]['message'] == rooms[room_id]['last_message']:
+        #    new_messages = True
             
-        elif new_messages == True:
-            print(str(messages[message_id])) #printing new messages
-            rooms[room_id]['last_message'] = messages[message_id]['message']
-            if messages[message_id]['username'] not in bots:
-                pass #bot responds to message
-            
+        #elif new_messages == True:
+        #    print(str(messages[message_id])) #printing new messages
+        #    rooms[room_id]['last_message'] = messages[message_id]['message']
+        #    if messages[message_id]['username'] not in bots:
+        #        pass #bot responds to message
+        counter += 1
+    rooms[room_id]['messages_gotten'] = counter
 
 def start_up():
     # Registering a new client
@@ -153,6 +162,7 @@ def start_up():
             chatroom = {
                 "last_user_message": "",
                 #"room_id": room['room_id']
+                "messages_gotten": 0
             }
             rooms[room['room_id']] = chatroom
 
@@ -173,7 +183,8 @@ def run():                  # Push notification
             for room_id in rooms.keys():
                 endpoint = "/api/room/{}/messages".format(int(room_id))
                 response = send_GET_Request(endpoint, {"user_id": botID})
-                print_new_messages(response, room_id)
+                if len(response.keys()) > rooms[room_id]['messages_gotten']:
+                    print_new_messages(response, room_id)
 
 
             
