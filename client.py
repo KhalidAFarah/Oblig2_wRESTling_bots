@@ -2,6 +2,7 @@ import requests
 import socket
 import random
 import json
+import time
 
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -20,7 +21,7 @@ exit_list=["exit","see you later","bye","quit"]
 rooms={}
 
 # Lets the bot get notified when they should get all mesages from a room 
-# Note: turning this off means the bot will attempt to fetch message each minute
+# Note: turning this off means the bot will attempt to fetch message each 30 seconds
 push_notification = False
 
 def Jarvis(action):
@@ -97,9 +98,25 @@ def get_all_rooms():
 def join_a_room(room_id, user_id):
     send_POST_Request(base_url+ "/api/room/{}/user".format(room_id), {"user_id": user_id})
 
-def print_new_messages(messages):
+def print_new_messages(messages, room_id):
+    new_messages = False
     for message_id in messages.keys():
-        if
+        if rooms[room_id]['last_message'] == "":
+            new_messages=True
+            print(str(messages[message_id])) #printing new messages
+            rooms[room_id]['last_message'] = messages[message_id]['message']
+            if messages[message_id]['username'] not in bots:
+                pass #bot responds to message
+
+        elif new_messages == False and messages[message_id]['message'] == rooms[room_id]['last_message']:
+            new_messages = True
+            
+        elif new_messages == True:
+            print(str(messages[message_id])) #printing new messages
+            rooms[room_id]['last_message'] = messages[message_id]['message']
+            if messages[message_id]['username'] not in bots:
+                pass #bot responds to message
+            
 
 def start_up():
     # Registering a new client
@@ -133,10 +150,11 @@ def start_up():
         elif push_notification == False:# If push notification is off the bot will always join
         
             join_a_room(room['room_id'], botID)
-            room = {
+            chatroom = {
                 "last_user_message": "",
+                #"room_id": room['room_id']
             }
-            rooms[room['room_id']] = room
+            rooms[room['room_id']] = chatroom
 
     run()
 
@@ -149,7 +167,14 @@ def run():                  # Push notification
             room_id = socket.recv(1024).decode()
             endpoint = "/api/room/{}/messages".format(int(room_id))
             response = send_GET_Request(endpoint, {"user_id": botID})
-            print_new_messages(response)
+            print_new_messages(response, room_id)
+        else:
+            time.sleep(30)
+            for room_id in rooms.keys():
+                endpoint = "/api/room/{}/messages".format(int(room_id))
+                response = send_GET_Request(endpoint, {"user_id": botID})
+                print_new_messages(response, room_id)
+
 
             
         
