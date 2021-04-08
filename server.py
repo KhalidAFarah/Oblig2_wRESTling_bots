@@ -14,7 +14,7 @@ users = {}
 counter_users = 0
 counter_rooms = 0
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-serversocket.bind(("127.0.0.1", 4242))
+#serversocket.bind(("127.0.0.1", 4242))
 
 def accept_Sockets():
 
@@ -229,7 +229,7 @@ class Room_messages_specified(Resource):
 
 api.add_resource(Room_messages_specified, "/api/room/<room_id>/<user_id>/messages")
 
-@app.rout("/")
+@app.route("/")
 def start_a_new_user():
     return render_template('index.html')
 
