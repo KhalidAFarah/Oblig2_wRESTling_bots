@@ -99,7 +99,7 @@ def join_a_room(room_id, user_id):
 
 def print_new_messages(messages):
     for message_id in messages.keys():
-        print()
+        if
 
 def start_up():
     # Registering a new client
@@ -146,10 +146,12 @@ def run():                  # Push notification
     global botname, botID   # It will always be an endpoint to a given room
     while True:             # For example /api/room/1/messages
         if push_notification:
-            endpoint = socket.recv(1024).decode()
+            room_id = socket.recv(1024).decode()
+            endpoint = "/api/room/{}/messages".format(int(room_id))
             response = send_GET_Request(endpoint, {"user_id": botID})
+            print_new_messages(response)
 
-            pe
+            
         
 
 start_up()
