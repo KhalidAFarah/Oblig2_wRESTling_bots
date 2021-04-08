@@ -1,19 +1,46 @@
-var http = new XMLHttpRequest()
-http.open("http://127.0.0.1:5000/")  
+
 <html>
 <head>
 <title></title>
-<link rel="stylesheet" href="{{url_for('Static',filename='CSS/style.css') }}">
+<link rel="stylesheet" href="{{url_for('static',filename='style.css') }}">
+<link rel="stylesheet" href="./static/style.css">
+
 <meta charset="utf-8">
 </head>
 <body>
-<form class="box" action="index.html" method="POST"
+    <form action="" method="post" id="test"></form>
 <h1>
     login
 </h1>
-<input type="text" name="" placeholder="Enter Username" id="Username">
-<input type="submit" name="" value="Create a User">
+<input type="text" name="" placeholder="Enter Username" id="username">
+<input type="submit" name="" value="Create a User" onclick="validateUsername()">
 </form>
+
+
+
+
+
+
+<script>
+function validateUsername() {
+    str=document.getElementById("username").value;
+    var error = "";
+    var illegalChars = /\W/; // allow letters, numbers, and underscores
+
+    if (str == "") {
+        error = "&bull; Please enter Username<br>";
+    } else if ((str.length < 5) || (str.length > 15)) {
+        error = "&bull; Username must have 5-15 characters<br>";
+    } else if (illegalChars.test(str)) {
+  	error = "&bull; Please enter valid Username. Use only numbers and alphabets<br>";
+      
+    } else {
+        error = "username succsecful";
+
+    }
+    alert (error);
+}
+</script>
 
 </body>
 </html>
