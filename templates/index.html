@@ -28,14 +28,14 @@ function validateUsername() {
     var illegalChars = /\W/; // allow letters, numbers, and underscores
 
     if (str == "") {
-        error = "&bull; Please enter Username<br>";
+        error = " Please enter Username";
     } else if ((str.length < 5) || (str.length > 15)) {
-        error = "&bull; Username must have 5-15 characters<br>";
+        error = " Username must have 5-15 characters";
     } else if (illegalChars.test(str)) {
-  	error = "&bull; Please enter valid Username. Use only numbers and alphabets<br>";
+  	error = " Please enter valid Username. Use only numbers and alphabets";
       
     } else {
-        error = "username succsecful";
+        error = "username successful";
 
     }
     alert (error);
