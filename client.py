@@ -144,14 +144,30 @@ def Prime(action):
     return message
 
 def Parker(action):
-    if action in greetings_list:
-        return"{}  Hi!"
-    elif action in Activities:
-        return"{} Not interested"
-    elif action in exit_list:
-        return "{} bye"
+    message = ""
+
+    if action['has_greetings']:
+        message = "Hi!"
+        if action['activity'] in Activities:
+            message += "im not interested in {}".format(action['activity']+"ing")
+            if action['has_farewells']:
+                message += ", bye?" #greeting and farewell in the same sentence
+        elif action['has_farewells']:
+            message += "bye? i guess." #greeting and farewell in the same sentence
+
+    elif action['activity'] in Activities:
+        message = "{}? Can we do something else?".format(action['activity']+"ing")
+        if action['has_farewells']: # farewell and action in a message
+            message += ", guess not. Goodbye."
+
+        
+    elif action['has_farewells']:
+        message = "bye"
+
     else:
-        return "..."
+        message = "..."
+
+    return message
 
 
 def send_GET_Request(URI, data=None):
