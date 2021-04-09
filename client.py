@@ -87,7 +87,7 @@ def Jarvis(action):
         if action['has_farewells']:
             message += " See you soon Boss"
 
-    elif action in exit_list:
+    elif action['has_farewells']:
         message = "see you soon Boss"
 
     else:
@@ -97,21 +97,21 @@ def Jarvis(action):
 
 def Stark(action):
     message = ""
-    if action in greetings_list:
+    if action['has_greetings']:
         message = "Howdy partner!"
         if action['activity'] in Activities:
-            message += " im too lazy to do some {}".format(action)
+            message += " im too lazy to do some {}".format(action['activity']+"ing")
             if action['has_farewells']:
                 message += ", chat with you later?" #greeting and farewell in the same sentence
         elif action['has_farewells']:
             message += " chat with you later?" #greeting and farewell in the same sentence
 
-    elif action in Activities:
-        message = "{} im lazy to ".format(action)
+    elif action['activity'] in Activities:
+        message = "{} im lazy to ".format(action['activity']+"ing")
         if action['has_farewells']: # farewell and action in a message
             message += ", chat with you later"
 
-    elif action in exit_list:
+    elif action['has_farewell'] in Activities:
         message = "chat with you later"
 
     else:
@@ -120,14 +120,28 @@ def Stark(action):
     return message
 
 def Prime(action):
-    if action in greetings_list:
-        return"{}  Hello mate!"
-    elif action in Activities:
-        return"{} im bussy right now maybe later"
-    elif action in exit_list:
-        return "{} see you soon"
+    message = ""
+
+    if action['has_greetings']:
+        message = "Hello mate!"
+        if action['activity'] in Activities:
+            message += "{} sorry, im bussy right now maybe later".format(action['activity']+"ing")
+            if action['has_farewells']:
+                message += ", a greeting and a farewel in the same sentence U+1F914 ?" #greeting and farewell in the same sentence
+        elif action['has_farewells']:
+            message += "U+1F914" #greeting and farewell in the same sentence
+
+    elif action['activity'] in Activities:
+        message = "{} im bussy right now maybe later ".format(action['activity']+"ing")
+        if action['has_farewells']: # farewell and action in a message
+            message += ", see you soon"
+
+    elif action['has_farewells']:
+        message = "see you soon"
     else:
-        return "what?"
+        message = "what?"
+
+    return message
 
 def Parker(action):
     if action in greetings_list:
