@@ -50,7 +50,7 @@ print(send_GET_Request(base_url+ "room/1/messages", {"user_id": id1}))
 print()
 
 while True:
-    time.sleep(5)
+    
     print("Getting all messages in room 1")
     response = send_GET_Request(base_url+ "room/1/messages", {"user_id": id1})
     print(response)
@@ -61,3 +61,4 @@ while True:
     message = input("write a message: ")
     print(send_POST_Request(base_url+ "room/1/{}/messages".format(id1), {"message": message}))
     print()
+    time.sleep(5)

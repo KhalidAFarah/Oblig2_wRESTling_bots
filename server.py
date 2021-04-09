@@ -45,7 +45,10 @@ def broadcast(room_id):
         #print(user_id in clientsockets.keys())
         #print("---------------------------------------------")
         if user_id in clientsockets.keys():
-            clientsockets[user_id].send(room_id.encode())
+            #data = {}
+            #data = {"room_id": room_id}
+            #data = json.dumps(data)
+            clientsockets[user_id].send("{};".format(room_id).encode()) # ; is delimeter in case more than message get received in one recv call
 accept_socket_thread = threading.Thread(target=accept_Sockets)
 
         
