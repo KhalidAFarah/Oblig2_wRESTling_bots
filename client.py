@@ -85,7 +85,7 @@ def Jarvis(action):
     elif action['activity'] in Activities:
         message = "{} sound like a great idea Boss!".format(action['activity']+"ing")
         if action['has_farewells']:
-            message += " See you soon Boss"
+            message += " See you soon Boss" # farewell and action in a message
 
     elif action['has_farewells']:
         message = "see you soon Boss"
