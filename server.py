@@ -10,6 +10,8 @@ app = Flask(__name__)
 api = Api(app)
 rooms = {}
 users = {}
+clientsockets = {}
+
 
 counter_users = 0
 counter_rooms = 0
@@ -28,15 +30,22 @@ def accept_Sockets():
         data = json.loads(data)
 
         print(str(data))
-
-        users[data['user_id']]['socket'] = clientsocket
+        clientsockets[data['user_id']] = clientsocket
+        #users[data['user_id']]['socket'] = clientsocket
         #clients.append(clientsocket)    #adds a client
 
 def broadcast(room_id):
-    for user in rooms[room_id]['users']:
-        if user['socket'] is not None:
-            user['socket'].send(room_id.encode())
-        
+    global clientsockets
+    for user_id in rooms[int(room_id)]['users'].keys():
+        #if users[rooms[int(room_id)]['users'][int(user_id)]["user_id"]]['socket'] != None:
+        #    users[rooms[int(room_id)]['users'][int(user_id)]["user_id"]]['socket'].send(room_id.encode())
+        #print("---------------------------------------------")
+        #print(clientsockets.keys())
+        #print(user_id)
+        #print(user_id in clientsockets.keys())
+        #print("---------------------------------------------")
+        if user_id in clientsockets.keys():
+            clientsockets[user_id].send(room_id.encode())
 accept_socket_thread = threading.Thread(target=accept_Sockets)
 
         
@@ -73,7 +82,7 @@ class User(Resource):
         #is id needed?
         self.user_id = counter_users
         self.name = data['name']
-        self.socket = None # The socket of the client will not be none if they have push notification
+        #self.socket = None # The socket of the client will not be none if they have push notification
         users[counter_users] = self.__dict__
 
         
@@ -90,11 +99,11 @@ class UserP(Resource):
     def post(self):#auto increments id 
         global counter_users
 
-        accept_socket_thread.start()
+        #accept_socket_thread.start()
         #print(accept_socket_thread.is_alive())
-        #if accept_socket_thread.is_alive() == False:
-        #    accept_socket_thread.start()
-        counter_users += 1     
+        if accept_socket_thread.is_alive() == False:
+            accept_socket_thread.start()
+             
 
         parser = reqparse.RequestParser()
         parser.add_argument("name")
@@ -102,8 +111,9 @@ class UserP(Resource):
         
         self.user_id = counter_users
         self.name = data['name']
-        self.socket = None # The socket of the client will not be none if they have push notification
+        #self.socket = None # The socket of the client will not be none if they have push notification
         users[counter_users] = self.__dict__
+        counter_users += 1
         
         return self.__dict__
 
@@ -174,7 +184,7 @@ class Room_UsersP(Resource):
             abort(404, message="not a valid user id given")
 
         #adding the user to the room
-        rooms[room_id]['users'][len(rooms[room_id]['users'])]=users[int(data['id'])]
+        rooms[room_id]['users'][len(rooms[room_id]['users'])]=users[int(data['user_id'])]
 
         return rooms[room_id]['users'][len(rooms[room_id]['users'])-1]
 api.add_resource(Room_UsersP, "/api/room/<int:room_id>/user")
@@ -188,7 +198,7 @@ class Room_messages(Resource):
         data = parser.parse_args()
         
         for user in rooms[room_id]['users'].values():
-            if int(user['User_id']) == int(data['user_id']):
+            if int(user['user_id']) == int(data['user_id']):
                 return rooms[room_id]['messages']
 
         abort(404, message="the user is not a registered user in the room")
@@ -217,12 +227,13 @@ class Room_messages_specified(Resource):
 
         message = {
             "user_id": user_id,
-            "username": users[int(user_id)['name']],
+            "username": users[int(user_id)]['name'],
             "message": data['message']
         }
 
         rooms[int(room_id)]['messages'][len(rooms[int(room_id)]['messages'])] = message
 
+        #should broadcast to users with pushnotification
         broadcast(room_id)
         return 200
 
