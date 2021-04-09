@@ -54,17 +54,19 @@ def findaction(message):
             find_greetings = False
         
         # looking in the list of Activities if a word is in the message
-        if index < len(Activities) and Activities[index] in message:
-            plausible['activity'] = Activities[index]
-            find_activities = False
+        if index < len(Activities):
+            if Activities[index] in message:
+                plausible['activity'] = Activities[index]
+                find_activities = False
         else:
             find_activities = False
 
         # looking in the exit_list if a word is in the message
-        if index < len(exit_list) and exit_list[index] in message:
-            #plausible.append(exit_list[index])
-            plausible['has_farewells'] = True
-            find_exits = False
+        if index < len(exit_list): 
+            if exit_list[index] in message:
+                #plausible.append(exit_list[index])
+                plausible['has_farewells'] = True
+                find_exits = False
         else:
             find_exits = False
 
@@ -127,9 +129,9 @@ def Prime(action):
         if action['activity'] in Activities:
             message += "{} sorry, im bussy right now maybe later".format(action['activity']+"ing")
             if action['has_farewells']:
-                message += ", a greeting and a farewel in the same sentence U+1F914 ?" #greeting and farewell in the same sentence
+                message += ", a greeting and a farewel in the same sentence 🤔?" #greeting and farewell in the same sentence
         elif action['has_farewells']:
-            message += "U+1F914" #greeting and farewell in the same sentence
+            message += " Wait 🤔" #greeting and farewell in the same sentence
 
     elif action['activity'] in Activities:
         message = "{} im bussy right now maybe later ".format(action['activity']+"ing")
