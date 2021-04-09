@@ -96,14 +96,28 @@ def Jarvis(action):
     return message
 
 def Stark(action):
+    message = ""
     if action in greetings_list:
-        return"{} Howdy partner!"
+        message = "Howdy partner!"
+        if action['activity'] in Activities:
+            message += " im too lazy to do some {}".format(action)
+            if action['has_farewells']:
+                message += ", chat with you later?" #greeting and farewell in the same sentence
+        elif action['has_farewells']:
+            message += " chat with you later?" #greeting and farewell in the same sentence
+
     elif action in Activities:
-        return"{} im lazy to ".format(action)
+        message = "{} im lazy to ".format(action)
+        if action['has_farewells']: # farewell and action in a message
+            message += ", chat with you later"
+
     elif action in exit_list:
-        return "{} chat with you later"
+        message = "chat with you later"
+
     else:
-        return "what do you mean?"
+        message = "what do you mean?"
+
+    return message
 
 def Prime(action):
     if action in greetings_list:
