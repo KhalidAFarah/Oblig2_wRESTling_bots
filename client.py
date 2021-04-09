@@ -15,7 +15,7 @@ botID = -1
 bots=["Jarvis","Stark","Parker","Prime"]
 
 greetings_list=["hi","hello","hey"]
-Activities=["read","run","Train","work"]
+Activities=["read","run","train","work"]
 exit_list=["exit","see you later","bye","quit"]
 
 
@@ -27,6 +27,7 @@ rooms={}
 push_notification = True
 
 def findaction(message):
+    global greetings_list, Activities, exit_list
     index = 0
     find_greetings = True
     find_activities = True
@@ -39,17 +40,23 @@ def findaction(message):
     }  # found words from Activities, greetings_list and exit_list resets each round of dialog
     #allow one action per message but can have a greeting and a farewell
 
+
+
     while find_greetings or find_activities or find_exits:
         # looking in the greetings_list if a word is in the message
-        if index < len(greetings_list) and greetings_list[index] in message:
-            #plausible['gretting']=greetings_list[index])
-            plausible['has_greetings'] = True
+        if index < len(greetings_list):
+            
+            if greetings_list[index] in message:
+                #plausible['gretting']=greetings_list[index])
+                plausible['has_greetings'] = True
+                find_greetings = False
         else:
             find_greetings = False
         
         # looking in the list of Activities if a word is in the message
         if index < len(Activities) and Activities[index] in message:
             plausible['activity'] = Activities[index]
+            find_activities = False
         else:
             find_activities = False
 
@@ -57,6 +64,7 @@ def findaction(message):
         if index < len(exit_list) and exit_list[index] in message:
             #plausible.append(exit_list[index])
             plausible['has_farewells'] = True
+            find_exits = False
         else:
             find_exits = False
 
@@ -64,14 +72,28 @@ def findaction(message):
     return plausible #returns an object of found actions, greeting and/or farewells
 
 def Jarvis(action):
-    if action in greetings_list:
-        return"{} Hey Boss!"
-    elif action in Activities:
-        return "{} sound like a great idea Boss!".format(action+"ing")
+    message = ""
+    if action['has_greetings']:
+        message = "Hey Boss!"
+        if action['activity'] in Activities:
+            message += " {} sound like a great idea".format(action['activity']+"ing")
+            if action['has_farewells']:
+                message += ", see you soon?" #greeting and farewell in the same sentence
+        elif action['has_farewells']:
+            message += " see you soon?" #greeting and farewell in the same sentence
+
+    elif action['activity'] in Activities:
+        message = "{} sound like a great idea Boss!".format(action['activity']+"ing")
+        if action['has_farewells']:
+            message += " See you soon Boss"
+
     elif action in exit_list:
-        return "{} see you soon Boss"
+        message = "see you soon Boss"
+
     else:
-        return "i didnt understand what you meant"
+        message = "i didnt understand what you meant"
+
+    return message
 
 def Stark(action):
     if action in greetings_list:
@@ -213,7 +235,7 @@ def start_up():
                 "messages_gotten": 0
             }
             rooms[int(room_id)] = chatroom
-            print(str(rooms))
+            #print(str(rooms))
         elif push_notification == False:# If push notification is off the bot will always join
         
             join_a_room(room_id, botID)
