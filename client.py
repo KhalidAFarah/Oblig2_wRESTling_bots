@@ -54,17 +54,19 @@ def findaction(message):
             find_greetings = False
         
         # looking in the list of Activities if a word is in the message
-        if index < len(Activities) and Activities[index] in message:
-            plausible['activity'] = Activities[index]
-            find_activities = False
+        if index < len(Activities):
+            if Activities[index] in message:
+                plausible['activity'] = Activities[index]
+                find_activities = False
         else:
             find_activities = False
 
         # looking in the exit_list if a word is in the message
-        if index < len(exit_list) and exit_list[index] in message:
-            #plausible.append(exit_list[index])
-            plausible['has_farewells'] = True
-            find_exits = False
+        if index < len(exit_list): 
+            if exit_list[index] in message:
+                #plausible.append(exit_list[index])
+                plausible['has_farewells'] = True
+                find_exits = False
         else:
             find_exits = False
 
@@ -127,9 +129,9 @@ def Prime(action):
         if action['activity'] in Activities:
             message += "{} sorry, im bussy right now maybe later".format(action['activity']+"ing")
             if action['has_farewells']:
-                message += ", a greeting and a farewel in the same sentence U+1F914 ?" #greeting and farewell in the same sentence
+                message += ", a greeting and a farewel in the same sentence 🤔?" #greeting and farewell in the same sentence
         elif action['has_farewells']:
-            message += "U+1F914" #greeting and farewell in the same sentence
+            message += " Wait 🤔" #greeting and farewell in the same sentence
 
     elif action['activity'] in Activities:
         message = "{} im bussy right now maybe later ".format(action['activity']+"ing")
@@ -214,6 +216,7 @@ def print_new_messages(messages, room_id):
             #rooms[room_id]['last_message'] = messages[message_id]['message']
             if messages[message_id]['username'] not in bots:
                 #bot responds to messages from non bots
+                print("sd")
                 plausible = findaction(messages[message_id]['message'])
                 if botname == bots[0]:# Jarvis
                     send_message(Jarvis(plausible), room_id)
@@ -299,17 +302,29 @@ def run():                  # Push notification
     global botname, botID   # It will always be an endpoint to a given room
     while True:             # For example /api/room/1/messages
         if push_notification:
-            room_id = int(socket.recv(1024).decode())
-            endpoint = base_url + "/api/room/{}/messages".format(room_id)
+            data = socket.recv(1024).decode()
+            #print("1")
+            #data = json.loads(data)
+            #print("2")
+
+            #print(str(data.keys()))
+            #room_id = -1
+            #if len(data.keys()) == 1:
+            #    room_id = int(data['room_id'])
+            #else:
+            #    room_id = int(data["0"]['room_id'])# trying to handle overflow of data recievd
+            room_id = data.split(";") 
+            
+            endpoint = base_url + "/api/room/{}/messages".format(int(room_id[0]))
             response = send_GET_Request(endpoint, {"user_id": botID})
-            print_new_messages(response, room_id)
+            print_new_messages(response, int(room_id[0]))
         else:
             time.sleep(30)
             for room_id in rooms.keys():
-                endpoint = "/api/room/{}/messages".format(int(room_id))
+                endpoint = "/api/room/{}/messages".format(int(room_id[0]))
                 response = send_GET_Request(endpoint, {"user_id": botID})
-                if len(response.keys()) > rooms[room_id]['messages_gotten']:
-                    print_new_messages(response, room_id)
+                if len(response.keys()) > rooms[room_id[0]]['messages_gotten']:
+                    print_new_messages(response, room_id[0])
 
 start_up()
 
