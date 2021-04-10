@@ -113,7 +113,7 @@ def Stark(action):
         if action['has_farewells']: # farewell and action in a message
             message += ", chat with you later"
 
-    elif action['has_farewell']:
+    elif action['has_farewells']:
         message = "chat with you later"
 
     else:
@@ -305,9 +305,11 @@ def run():                  # Push notification
             data = socket.recv(1024).decode()
             
             unique = []
+            print(str(data.split(";")))
             for rid in data.split(";"):
-                if rid not in unique:
-                    pass
+                if rid != '':
+                    if rid not in unique:
+                        unique.append(int(rid))
             #print("1")
             #data = json.loads(data)
             #print("2")
@@ -318,18 +320,17 @@ def run():                  # Push notification
             #    room_id = int(data['room_id'])
             #else:
             #    room_id = int(data["0"]['room_id'])# trying to handle overflow of data recievd
-            room_id = data.split(";") 
-            
-            endpoint = base_url + "/api/room/{}/messages".format(int(room_id[0]))
-            response = send_GET_Request(endpoint, {"user_id": botID})
-            print_new_messages(response, int(room_id[0]))
+            for room_id in unique:
+                endpoint = base_url + "/api/room/{}/messages".format(int(room_id))
+                response = send_GET_Request(endpoint, {"user_id": botID})
+                print_new_messages(response, int(room_id))
         else:
             time.sleep(30)
             for room_id in rooms.keys():
-                endpoint = "/api/room/{}/messages".format(int(room_id[0]))
+                endpoint = "/api/room/{}/messages".format(int(room_id))
                 response = send_GET_Request(endpoint, {"user_id": botID})
-                if len(response.keys()) > rooms[room_id[0]]['messages_gotten']:
-                    print_new_messages(response, room_id[0])
+                if len(response.keys()) > rooms[room_id]['messages_gotten']:
+                    print_new_messages(response, room_id)
 
 start_up()
 
