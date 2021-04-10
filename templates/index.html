@@ -18,10 +18,33 @@
 
 
 
-
-
+<div class="rooms"></div>
 
 <script>
+user = null;
+
+function Getallrooms(){
+    var http = new XMLHttpRequest()
+    http.open("GET","http://127.0.0.1:5000/api/rooms", true)
+    http.onreadystatechange = function(){
+        if(this.status === 200){
+            rooms = JSON.parse(this.responseText);
+            var rs = document.getElementsByClassName("rooms")
+            for(var i = 0; i < rooms.length; i++){
+                var btn = "<button class=\"btnrooms\" onclick=\"button_atrooms\">Join room</button>"
+                var room_name = "<h1>Room  "+rooms[i].room_id+"</h1>"
+                rs[0].innerHTML +=  "<div class=\"room\">"+ room_name + btn+"</div>" 
+                function button_atrooms(){
+                console.log("hei")
+                
+               }
+ 
+            }
+        }
+        
+    }   
+    http.send();
+}    
 function validateUsername() {
     str=document.getElementById("username").value;
     var error = "";
@@ -36,6 +59,20 @@ function validateUsername() {
       
     } else {
         error = "username successful";
+        document.getElementsByClassName("box")[0].action="/api/user?name="+str;
+        var http = new XMLHttpRequest()
+        console.log("1")
+        http.open("GET","http://localhost:5000/api/user?name="+username, true)
+        http.onreadystatechange = function(){
+            if(this.status === 200){
+                user = JSON.parse(this.responseText);
+                console.log(user)
+                Getallrooms()
+
+            }
+            
+        }   
+        http.send();
 
     }
     alert (error);
