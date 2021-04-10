@@ -93,7 +93,7 @@ def Jarvis(action):
         message = "see you soon Boss"
 
     else:
-        message = "i didnt understand what you meant"
+        message = "i didnt understand what you meant🤔"
 
     return message
 
@@ -102,7 +102,7 @@ def Stark(action):
     if action['has_greetings']:
         message = "Howdy partner!"
         if action['activity'] in Activities:
-            message += " im too lazy to do some {}".format(action['activity']+"ing")
+            message += " im too tired to do some {}😴".format(action['activity']+"ing")
             if action['has_farewells']:
                 message += ", chat with you later?" #greeting and farewell in the same sentence
         elif action['has_farewells']:
@@ -117,7 +117,7 @@ def Stark(action):
         message = "chat with you later"
 
     else:
-        message = "what do you mean?"
+        message = "what do you mean?🤔"
 
     return message
 
@@ -125,7 +125,7 @@ def Prime(action):
     message = ""
 
     if action['has_greetings']:
-        message = "Hello mate!"
+        message = "Hello mate!😎"
         if action['activity'] in Activities:
             message += "{} sorry, im bussy right now maybe later".format(action['activity']+"ing")
             if action['has_farewells']:
@@ -139,7 +139,7 @@ def Prime(action):
             message += ", see you soon"
 
     elif action['has_farewells']:
-        message = "see you soon"
+        message = "see you soon😛"
     else:
         message = "what?"
 
