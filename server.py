@@ -1,4 +1,4 @@
-from flask import Flask, render_template    
+from flask import Flask, render_template, jsonify
 from flask_restful import Api, Resource, reqparse, abort
 import socket
 import threading
@@ -138,7 +138,9 @@ def abort_if_room_not_exist(room_id):
 #get all chat rooms
 class Rooms(Resource):
     def get(self):
-        return rooms
+        data = jsonify(rooms)
+        data.headers.add("Access-Control-Allow-Origin", "*")
+        return data
 api.add_resource(Rooms, "/api/rooms")
 
 #get a chatroom
