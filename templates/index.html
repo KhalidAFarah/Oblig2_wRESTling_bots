@@ -1,83 +1,84 @@
 
 <html>
-<head>
-<title></title>
-<link rel="stylesheet" href="{{url_for('static',filename='style.css') }}">
-<!--<link rel="stylesheet" href="./static/style.css">-->
-
-<meta charset="utf-8">
-</head>
-<body>
-    <form class="box" action="" method="POST">
-<h1>
-    Create a User
-</h1>
-<input type="text" name="" placeholder="Enter Username" id="username">
-<input type="submit" name="" value="Create a User" onclick="validateUsername()">
-</form>
-
-
-
-<div class="rooms"></div>
-
-<script>
-user = null;
-
-function Getallrooms(){
-    var http = new XMLHttpRequest()
-    http.open("GET","http://127.0.0.1:5000/api/rooms", true)
-    http.onreadystatechange = function(){
-        if(this.status === 200){
-            rooms = JSON.parse(this.responseText);
-            var rs = document.getElementsByClassName("rooms")
-            for(var i = 0; i < rooms.length; i++){
-                var btn = "<button class=\"btnrooms\" onclick=\"button_atrooms\">Join room</button>"
-                var room_name = "<h1>Room  "+rooms[i].room_id+"</h1>"
-                rs[0].innerHTML +=  "<div class=\"room\">"+ room_name + btn+"</div>" 
-                function button_atrooms(){
-                console.log("hei")
-                
-               }
- 
-            }
-        }
-        
-    }   
-    http.send();
-}    
-function validateUsername() {
-    str=document.getElementById("username").value;
-    var error = "";
-    var illegalChars = /\W/; // allow letters, numbers, and underscores
-
-    if (str == "") {
-        error = " Please enter Username";
-    } else if ((str.length < 5) || (str.length > 15)) {
-        error = " Username must have 5-15 characters";
-    } else if (illegalChars.test(str)) {
-  	error = " Please enter valid Username. Use only numbers and alphabets";
-      
-    } else {
-        error = "username successful";
-        document.getElementsByClassName("box")[0].action="/api/user?name="+str;
+    <head>
+    <title></title>
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css') }}">
+    <!--<link rel="stylesheet" href="./static/style.css">-->
+    
+    <meta charset="utf-8">
+    </head>
+    <body>
+        <div class="box">
+    <h1>
+        Create a User
+    </h1>
+    <input type="text" name="" placeholder="Enter Username" id="username">
+    <input type="submit" name="" value="Create a User" onclick="validateUsername()">
+</div>
+    
+    
+    
+    <div class="rooms"></div>
+    
+    <script>
+    var user = null;
+    
+    function Getallrooms(){
         var http = new XMLHttpRequest()
-        console.log("1")
-        http.open("GET","http://localhost:5000/api/user?name="+username, true)
+        http.open("GET","http://127.0.0.1:5000/api/rooms", true)
         http.onreadystatechange = function(){
-            if(this.status === 200){
-                user = JSON.parse(this.responseText);
-                console.log(user)
-                Getallrooms()
-
+            if(this.readyState == 4 && this.status === 200){
+                var rooms = JSON.parse(this.responseText);
+                var rs = document.getElementsByClassName("rooms")
+                for(var i = 0; i < rooms.length; i++){
+                    var btn = "<button class=\"btnrooms\" onclick=\"button_atrooms\">Join room</button>"
+                    var room_name = "<h1>Room  "+rooms[i].room_id+"</h1>"
+                    rs[0].innerHTML +=  "<div class=\"room\">"+ room_name + btn+"</div>" 
+                    function button_atrooms(){
+                    console.log("hei")
+                    
+                   }
+     
+                }
             }
             
         }   
         http.send();
-
+    }    
+    function validateUsername() {
+        str=document.getElementById("username").value;
+        var error = "";
+        var illegalChars = /\W/; // allow letters, numbers, and underscores
+    
+        if (str == "") {
+            error = " Please enter Username";
+        } else if ((str.length < 5) || (str.length > 15)) {
+            error = " Username must have 5-15 characters";
+        } else if (illegalChars.test(str)) {
+          error = " Please enter valid Username. Use only numbers and alphabets";
+          
+        } else {
+            error = "username successful";
+            //document.getElementsByClassName("box")[0].action="/api/user?name="+str;
+            var http = new XMLHttpRequest()
+            http.open("POST","http://localhost:5000/api/user?name="+str, true)
+            http.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status === 200){
+                    user = JSON.parse(this.responseText);
+                    console.log(user)
+                    
+                    Getallrooms()
+    
+                }
+                
+            }   
+            http.send();
+    
+        }
+        alert (error);
     }
-    alert (error);
-}
-</script>
-
-</body>
-</html> 
+    </script>
+    
+    </body>
+    </html> 
+    
