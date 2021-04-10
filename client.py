@@ -113,7 +113,7 @@ def Stark(action):
         if action['has_farewells']: # farewell and action in a message
             message += ", chat with you later"
 
-    elif action['has_farewell'] in Activities:
+    elif action['has_farewell']:
         message = "chat with you later"
 
     else:
@@ -303,6 +303,11 @@ def run():                  # Push notification
     while True:             # For example /api/room/1/messages
         if push_notification:
             data = socket.recv(1024).decode()
+            
+            unique = []
+            for rid in data.split(";"):
+                if rid not in unique:
+                    pass
             #print("1")
             #data = json.loads(data)
             #print("2")
