@@ -8,13 +8,13 @@
 <meta charset="utf-8">
 </head>
 <body>
-    <form class="box" action="" method="POST">
+    <div class="box">
 <h1>
     Create a User
 </h1>
 <input type="text" name="" placeholder="Enter Username" id="username">
 <input type="submit" name="" value="Create a User" onclick="validateUsername()">
-</form>
+</div>
 
 
 
@@ -62,7 +62,7 @@ function validateUsername() {
         document.getElementsByClassName("box")[0].action="/api/user?name="+str;
         var http = new XMLHttpRequest()
         console.log("1")
-        http.open("GET","http://localhost:5000/api/user?name="+username, true)
+        http.open("POST","http://localhost:5000/api/user?name="+str, true)
         http.onreadystatechange = function(){
             if(this.status === 200){
                 user = JSON.parse(this.responseText);
