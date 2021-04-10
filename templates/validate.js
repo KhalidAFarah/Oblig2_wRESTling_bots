@@ -1,44 +1,15 @@
-user = null;
-function Getallrooms(){
-    var http = new XMLHttpRequest()
-    http.open("http://127.0.0.1:5000/api/rooms", true)
-    http.onreadystatechange = function(){
-        if(this.status === 200){
-            rooms = JSON.parse(this.responseText);
-            Getallrooms()
+function validateUsername(str) {
+    var error = "";
+    var illegalChars = /\W/; // allow letters, numbers, and underscores
 
-        }
-        
-    }   
-    http.send();
-}
-
-function Setuprooms()
-
-function validate()
-{
-    var username=document.getElementById("username").value;
-    if(username=="admin"){
-        alert("login succes");
-        return false;
-
+    if (str == "") {
+        error = "&bull; Please enter Username<br>";
+    } else if ((str.length < 5) || (str.length > 15)) {
+        error = "&bull; Username must have 5-15 characters<br>";
+    } else if (illegalChars.test(str)) {
+  	error = "&bull; Please enter valid Username. Use only numbers and alphabets<br>";
+    } else {
+        error = "";
     }
-    else
-    {
-        alert("login failed")
-    }
-    var http = new XMLHttpRequest()
-    http.open("http://localhost:5000/baset/api/user?name="+username, true)
-    http.onreadystatechange = function(){
-        if(this.status === 200){
-            user = JSON.parse(this.responseText);
-            Getallrooms()
-
-        }
-        
-    }   
-    http.send();
-
-
-    
+    return error;
 }
