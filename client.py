@@ -14,7 +14,7 @@ botID = -1
 
 bots=["Jarvis","Stark","Parker","Prime"]
 
-greetings_list=["hi","hello","hey"]
+greetings_list=["hi","hello","hey","how are you"]
 Activities=["read","run","train","work"]
 exit_list=["exit","see you later","bye","quit"]
 
@@ -78,7 +78,7 @@ def Jarvis(action):
     if action['has_greetings']:
         message = "Hey Boss!"
         if action['activity'] in Activities:
-            message += " {} sound like a great idea".format(action['activity']+"ing")
+            message += " {} sounds like a great idea😎".format(action['activity']+"ing")
             if action['has_farewells']:
                 message += ", see you soon?" #greeting and farewell in the same sentence
         elif action['has_farewells']:
@@ -93,7 +93,7 @@ def Jarvis(action):
         message = "see you soon Boss"
 
     else:
-        message = "i didnt understand what you meant🤔"
+        message = "I didn't quite understand what you meant🤔"
 
     return message
 
@@ -127,14 +127,14 @@ def Prime(action):
     if action['has_greetings']:
         message = "Hello mate!😎"
         if action['activity'] in Activities:
-            message += "{} sorry, im bussy right now maybe later".format(action['activity']+"ing")
+            message += "Sorry i am not capable of {} right now, maybe later".format(action['activity']+"ing")
             if action['has_farewells']:
                 message += ", a greeting and a farewel in the same sentence 🤔?" #greeting and farewell in the same sentence
         elif action['has_farewells']:
             message += " Wait 🤔" #greeting and farewell in the same sentence
 
     elif action['activity'] in Activities:
-        message = "{} im bussy right now maybe later ".format(action['activity']+"ing")
+        message = "{}? No, i am too tired to do that".format(action['activity']+"ing")
         if action['has_farewells']: # farewell and action in a message
             message += ", see you soon"
 
@@ -151,14 +151,14 @@ def Parker(action):
     if action['has_greetings']:
         message = "Hi!"
         if action['activity'] in Activities:
-            message += "im not interested in {}".format(action['activity']+"ing")
+            message += "im not interested in {}😑".format(action['activity']+"ing")
             if action['has_farewells']:
                 message += ", bye?" #greeting and farewell in the same sentence
         elif action['has_farewells']:
             message += "bye? i guess." #greeting and farewell in the same sentence
 
     elif action['activity'] in Activities:
-        message = "{}? Can we do something else?".format(action['activity']+"ing")
+        message = "{}? Can we do something else?😬".format(action['activity']+"ing")
         if action['has_farewells']: # farewell and action in a message
             message += ", guess not. Goodbye."
 
