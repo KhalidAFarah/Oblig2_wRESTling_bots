@@ -24,7 +24,9 @@
 </div>
 
 <script>
-var user = null;
+    var user = null;
+    var current_room = -1;
+    read_messages = 0;
 
     function Getallrooms(){
 
@@ -63,40 +65,64 @@ var user = null;
                     http2.send();
                 }
 
-                function join_a_room(i){
-                    var http = new XMLHttpRequest()
-                    http.open("POST","http://localhost:5000/api/user?name="+str, true)
-                    http.onreadystatechange = function(){
-                        if(this.readyState == 4 && this.status === 200){
-                            user = JSON.parse(this.responseText);
-                            console.log(user)
+                function enter_room(btn){
+                    //console.log("Entering room " + btn.value)
+                    current_room = btn.value
+                }
 
-                            Getallrooms()
+                function join_a_room(btn){
+                    if(btn.innerHTML != "Enter room"){
+                        var http = new XMLHttpRequest()
+                        http.open("POST","http://localhost:5000/api/room/"+btn.value+"/user?user_id="+user.user_id, true)
+                        http.onreadystatechange = function(){
+                            if(this.readyState == 4 && this.status === 200){
+                                //user = JSON.parse(this.responseText);
+                                //btn = document.getElementsByClassName("btnrooms")
+                                btn.innerHTML = "Enter room"
+                                btn.onclick = function(){
+                                    enter_room(this)
+                                }
+
+                            }
 
                         }
-
-                    }
-                    http.send();
+                        http.send();
+                    }else{enter_room(btn)}
                 }
                 
 
                 function show_rooms(){
                     rsb[0].innerHTML = "";
-                    console.log(rooms)
+                    //console.log(rooms)
                     roomsK = Object.keys(rooms) 
                     for(var i = 0; i < roomsK.length; i++){
+                        var has_Joined = false;
+                        var usersK = Object.keys(rooms[roomsK[i]].users)
+                        for(var j = 0; j < usersK.length; j++){
+                            if(user.user_id == rooms[roomsK[i]].users[usersK[j]].user_id){
+                                has_Joined = true   
+                            }
+                        }
                         var btn = "<button class=\"btnrooms\">Join room</button>"
+                        if (has_Joined == true ){
+                            btn = "<button class=\"btnrooms\">Enter room</button>"
+                        }
+
                         var room_name = "<h1>Room  "+rooms[roomsK[i]].room_id+"</h1>"
                         rsb[0].innerHTML +=  "<div class=\"room\">"+ room_name + btn+"</div>"
+                            
+                        var btn2 = document.getElementsByClassName("btnrooms");
+                        btn2[i].value=i+1
                         
-                        var btn2 = document.getElementsByClassName("btnrooms");
-                        btn2[i].value=i
-                    }
+                        
 
-                    for(var i = 0; i < 4; i++){
-                        var btn2 = document.getElementsByClassName("btnrooms");
-                        btn2[i].onclick = function(){join_a_room(this.value)}
+                        
+                            
                     }
+                    for(var i = 0; i < roomsK.length; i++){
+                            //var btn2 = document.getElementsByClassName("btnrooms");
+                            btn2[i].onclick = function(){join_a_room(this)}
+                        }
 
                 }
                 show_rooms()
