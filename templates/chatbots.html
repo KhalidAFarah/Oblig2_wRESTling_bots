@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="flask.css">
+  <link rel="stylesheet" href="{{url_for('static',filename='chatbot.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
   <body>
-    <h1>Flask Chatterbot Example</h1>
+    <h1>Welcome to Chatbot</h1>
    
     <div>
       <div id="chatbox">
@@ -41,7 +40,7 @@
                 var messages=JSON.parse(this.responseText);
                 var counter=0;
                 console.log(messages);
-                for(var i=0;i<messages.length;i++){
+                for(var i=0;i<Object.keys(messages.length);i++){
                     if(i>=read_messages){
                         var botHtml = '<p class="botText"><span>' + data + '</span></p>';
                          $("#chatbox").append(botHtml);
