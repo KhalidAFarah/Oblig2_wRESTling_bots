@@ -23,7 +23,7 @@ function Getallrooms(){
     http.send();
 }
 
-function Setuprooms()
+/*function Setuprooms()*/
 
 function validate()
 {
