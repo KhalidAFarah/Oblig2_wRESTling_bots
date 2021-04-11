@@ -164,7 +164,9 @@ class RoomP(Resource):
         }
 
         rooms[counter_rooms] = room
-        return room
+        response = jsonify(room)
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
 api.add_resource(RoomP, "/api/room")
 
 #get all users in the room

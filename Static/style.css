@@ -68,3 +68,22 @@ body{
 {
     background: #ffffffec;
 }
+.rooms{
+    background-color: white;
+    width: 80%;
+    height: 80%;
+    margin: 10%;
+}
+
+.roomstop{
+    
+}
+.roomsbot{
+    width: 100%;
+    height: 80%;
+}
+.room{
+    width: 100%;
+    height: 10%;
+    background-color: black;
+}
