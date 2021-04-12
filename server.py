@@ -117,8 +117,11 @@ class UserP(Resource):
         #self.socket = None # The socket of the client will not be none if they have push notification
         users[counter_users] = self.__dict__
         counter_users += 1
+
+        response = jsonify(self.__dict__)
+        response.headers.add("Access-Control-Allow-Origin", "*")
         
-        return self.__dict__
+        return response
 
 
 api.add_resource(User, "/api/user/<int:user_id>")#user id should not be needed 
