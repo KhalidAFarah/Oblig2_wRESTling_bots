@@ -15,12 +15,12 @@
         <input id="buttonInput" type="submit" value="Send">
       </div>
       <script>
-          var data = window.location.href.split("/")
-          var current_room=data[data.length-1]
-          var username = data[data.length-2]
-          var user_id = data[data.length-3]
+          var data = window.location.href.split("/");
+          var current_room=data[data.length-1];
+          var username = data[data.length-2];
+          var user_id = data[data.length-3];
 
-          var read_messages=0
+          var read_messages=0;
         
 
         function getBotResponse() {
@@ -32,21 +32,15 @@
 
           var http = new XMLHttpRequest()
             http.open("POST","http://localhost:5000/api/room/"+current_room+"/"+user_id+"/messages?message="+rawText, true)
-            http.onreadystatechange = function(){
-                if(this.readyState == 4 && this.status === 200){
-
-                }
-
-            }
             http.send();
          
         
         }
 
-        var myVar=setInterval(printNewMessages,5000);
+        var myVar=setInterval(function(){printNewMessages(false)},5000);
 
 
-        function printNewMessages(){
+        function printNewMessages(first){
             var http=new XMLHttpRequest()
             http.open("GET","http://127.0.0.1:5000/api/room/"+current_room+"/messages?user_id="+user_id,true)
             http.onreadystatechange=function(){
@@ -54,18 +48,26 @@
                 var messages=JSON.parse(this.responseText);
                 var messagesK = Object.keys(messages)
                 //console.log(messages);
-                for(var i=1;i<messagesK.length;i++){
+                var i = 0;
+                while(i<messagesK.length){
+                  i++;
                     if(i>read_messages){
                       if(messages[messagesK[i]].user_id != user_id){
                         var botHtml = '<p class="botText"><span>'+ messages[messagesK[i]].username +": " + messages[messagesK[i]].message + '</span></p>';
                         $("#chatbox").append(botHtml);
                         document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
-                        read_messages+=1;
+                        read_messages++;
+                      }else if(first && messages[messagesK[i]].user_id == user_id){
+                        var botHtml = '<p class="userText"><span>'+ messages[messagesK[i]].message + '</span></p>';
+                        $("#chatbox").append(botHtml);
+                        document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
+                        read_messages++;
+                      }else{
+                        read_messages++;
                       }
                     }
-                   
-
                 }
+                
                
               }
             }
@@ -76,7 +78,8 @@
             //document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
          // });
         }
-        printNewMessages()
+        printNewMessages(true)
+        
         $("#textInput").keypress(function(e) {
             if ((e.which == 13) && document.getElementById("textInput").value != "" ){
                 getBotResponse();

@@ -203,7 +203,9 @@ class Room_messages(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument("user_id")
         data = parser.parse_args()
-        print(rooms)
+
+        abort_if_room_not_exist(room_id)
+        
         for user_id in rooms[room_id]['users'].keys():
             if int(rooms[room_id]['users'][user_id]['user_id']) == int(data['user_id']):
                 response = jsonify(rooms[room_id]['messages'])
