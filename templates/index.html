@@ -68,6 +68,7 @@
                 function enter_room(btn){
                     //console.log("Entering room " + btn.value)
                     current_room = btn.value
+                    window.location = "http://localhost:5000/"+user.user_id+"/"+user.name+"/"+btn.value;
                 }
 
                 function join_a_room(btn){

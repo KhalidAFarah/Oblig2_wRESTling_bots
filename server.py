@@ -251,6 +251,9 @@ api.add_resource(Room_messages_specified, "/api/room/<room_id>/<user_id>/message
 def start_a_new_user():
     return render_template('index.html')
 
+@app.route("/<userid>/<name>/<roomid>")
+def start_chatbox(userid, name, roomid):
+    return render_template("chatbots.html")
 
 if __name__ == "__main__":
     #accept_socket_thread.daemon = True
