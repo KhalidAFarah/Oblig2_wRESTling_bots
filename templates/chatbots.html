@@ -5,6 +5,7 @@
   </head>
   <body>
     <h1>Welcome to Chatbot</h1>
+    <div class="backbox"><button class="btnback" onclick="previouspage()">previous page</button></div>
    
     <div>
       <div id="chatbox">
@@ -50,8 +51,8 @@
                 //console.log(messages);
                 var i = 0;
                 while(i<messagesK.length){
-                  i++;
-                    if(i>read_messages){
+                  
+                    if(i>=read_messages){
                       if(messages[messagesK[i]].user_id != user_id){
                         var botHtml = '<p class="botText"><span>'+ messages[messagesK[i]].username +": " + messages[messagesK[i]].message + '</span></p>';
                         $("#chatbox").append(botHtml);
@@ -66,6 +67,7 @@
                         read_messages++;
                       }
                     }
+                    i++;
                 }
                 
                
@@ -90,6 +92,9 @@
                 getBotResponse();
             }
         })
+        function previouspage(){
+          window.location = window.location = "http://localhost:5000/"+user_id+"/"+username+"/"
+        }
       </script>
     </div>
   </body>
