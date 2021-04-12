@@ -203,10 +203,12 @@ class Room_messages(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument("user_id")
         data = parser.parse_args()
-        
-        for user in rooms[room_id]['users'].values():
-            if int(user['user_id']) == int(data['user_id']):
-                return rooms[room_id]['messages']
+        print(rooms)
+        for user_id in rooms[room_id]['users'].keys():
+            if int(rooms[room_id]['users'][user_id]['user_id']) == int(data['user_id']):
+                response = jsonify(rooms[room_id]['messages'])
+                response.headers.add("Access-Control-Allow-Origin", "*")
+                return response
 
         abort(404, message="the user is not a registered user in the room")
 api.add_resource(Room_messages, "/api/room/<int:room_id>/messages")
@@ -245,7 +247,7 @@ class Room_messages_specified(Resource):
         return 200
 
 
-api.add_resource(Room_messages_specified, "/api/room/<room_id>/<user_id>/messages")
+api.add_resource(Room_messages_specified, "/api/room/<int:room_id>/<int:user_id>/messages")
 
 @app.route("/")
 def start_a_new_user():

@@ -8,14 +8,18 @@
    
     <div>
       <div id="chatbox">
-        <p class="botText"><span>Hi! I'm Jarvis.</span></p>
+        <!--<p class="botText"><span>Hi! I'm Jarvis.</span></p>-->
       </div>
       <div id="userInput">
         <input id="textInput" type="text" name="msg" placeholder="Message">
         <input id="buttonInput" type="submit" value="Send">
       </div>
       <script>
-          var current_room=1
+          var data = window.location.href.split("/")
+          var current_room=data[data.length-1]
+          var username = data[data.length-2]
+          var user_id = data[data.length-3]
+
           var read_messages=0
         
 
@@ -25,27 +29,39 @@
           $("#textInput").val("");
           $("#chatbox").append(userHtml);
           document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
+
+          var http = new XMLHttpRequest()
+            http.open("POST","http://localhost:5000/api/room/"+current_room+"/"+user_id+"/messages?message="+rawText, true)
+            http.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status === 200){
+
+                }
+
+            }
+            http.send();
          
         
         }
 
-        var myVar=setInterval(printNewMessages,10000);
+        var myVar=setInterval(printNewMessages,5000);
 
 
         function printNewMessages(){
             var http=new XMLHttpRequest()
-            http.open("GET","http://127.0.0.1:5000/api/room/"+current_room+"/messages",true)
+            http.open("GET","http://127.0.0.1:5000/api/room/"+current_room+"/messages?user_id="+user_id,true)
             http.onreadystatechange=function(){
               if(this.readyState==4 && this.status == 200){
                 var messages=JSON.parse(this.responseText);
-                var counter=0;
-                console.log(messages);
-                for(var i=0;i<Object.keys(messages.length);i++){
-                    if(i>=read_messages){
-                        var botHtml = '<p class="botText"><span>' + data + '</span></p>';
-                         $("#chatbox").append(botHtml);
+                var messagesK = Object.keys(messages)
+                //console.log(messages);
+                for(var i=1;i<messagesK.length;i++){
+                    if(i>read_messages){
+                      if(messages[messagesK[i]].user_id != user_id){
+                        var botHtml = '<p class="botText"><span>'+ messages[messagesK[i]].username +": " + messages[messagesK[i]].message + '</span></p>';
+                        $("#chatbox").append(botHtml);
                         document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
                         read_messages+=1;
+                      }
                     }
                    
 
@@ -53,12 +69,14 @@
                
               }
             }
+            http.send()
            // $.get("/get", { msg: rawText }).done(function(data) {
             //var botHtml = '<p class="botText"><span>' + data + '</span></p>';
             //$("#chatbox").append(botHtml);
             //document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
          // });
         }
+        printNewMessages()
         $("#textInput").keypress(function(e) {
             if ((e.which == 13) && document.getElementById("textInput").value != "" ){
                 getBotResponse();
