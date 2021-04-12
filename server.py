@@ -255,6 +255,10 @@ api.add_resource(Room_messages_specified, "/api/room/<int:room_id>/<int:user_id>
 def start_a_new_user():
     return render_template('index.html')
 
+@app.route("/<userid>/<name>/")
+def select_a_room(userid, name):
+    return render_template("rooms.html")
+
 @app.route("/<userid>/<name>/<roomid>")
 def start_chatbox(userid, name, roomid):
     return render_template("chatbots.html")

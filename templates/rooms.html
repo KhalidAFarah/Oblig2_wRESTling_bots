@@ -1,0 +1,126 @@
+
+<html>
+    <head>
+    <title></title>
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css') }}">
+    
+    <meta charset="utf-8">
+    </head>
+    <body>
+        
+    
+    
+    
+    <div class="rooms">
+        <div class="roomstop"></div>
+        <div class="roomsbot"></div>
+    </div>
+    
+    <script>
+        var data = window.location.href.split("/")
+        const name = data[data.length-2];
+        const user_id = data[data.length-3];
+        
+    
+        function Getallrooms(){
+    
+            var http = new XMLHttpRequest()
+            http.open("GET","http://127.0.0.1:5000/api/rooms", true)
+            http.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status === 200){
+                    
+                    
+    
+    
+                    var rooms = JSON.parse(this.responseText);
+                    var rs = document.getElementsByClassName("rooms");
+                    var rst = document.getElementsByClassName("roomstop");
+                    var rsb = document.getElementsByClassName("roomsbot");
+                    //document.getElementsByClassName("box")[0].style = "display: none;";
+                    console.log(rooms);
+    
+    
+    
+                    //add a room button
+                    
+                    
+                    var add_room_btn = "<button class=\"btnaddrooms\">Create a room</button>";
+                    rst[0].innerHTML = add_room_btn;
+                    document.getElementsByClassName("btnaddrooms")[0].onclick=function addrooms(){
+                        var http2 = new XMLHttpRequest();
+                        http2.open("POST","http://127.0.0.1:5000/api/room", true)
+                        http2.onreadystatechange = function(){
+                            if(this.readyState === 4 && this.status === 200){
+                                Getallrooms()
+                            }
+                        }
+                        http2.send();
+                    }
+    
+                    function enter_room(btn){
+                        window.location = "http://localhost:5000/"+user_id+"/"+name+"/"+btn.value;
+                    }
+    
+                    function join_a_room(btn){
+                        if(btn.innerHTML != "Enter room"){
+                            var http = new XMLHttpRequest()
+                            http.open("POST","http://localhost:5000/api/room/"+btn.value+"/user?user_id="+user_id, true)
+                            http.onreadystatechange = function(){
+                                if(this.readyState == 4 && this.status === 200){
+                                    btn.innerHTML = "Enter room"
+                                    btn.onclick = function(){
+                                        enter_room(this)
+                                    }
+                                }
+    
+                            }
+                            http.send();
+                        }else{enter_room(btn)}
+                    }
+                    
+    
+                    function show_rooms(){
+                        rsb[0].innerHTML = "";
+                        roomsK = Object.keys(rooms) 
+                        for(var i = 0; i < roomsK.length; i++){
+                            var has_Joined = false;
+                            var usersK = Object.keys(rooms[roomsK[i]].users)
+                            for(var j = 0; j < usersK.length; j++){
+                                if(user_id == rooms[roomsK[i]].users[usersK[j]].user_id){
+                                    has_Joined = true   
+                                }
+                            }
+                            var btn = "<button class=\"btnrooms\">Join room</button>"
+                            if (has_Joined == true ){
+                                btn = "<button class=\"btnrooms\">Enter room</button>"
+                            }
+    
+                            var room_name = "<h1 class=\"hrooms\">Room  "+rooms[roomsK[i]].room_id+"</h1>"
+                            rsb[0].innerHTML +=  "<div class=\"room\">"+ room_name + btn+"</div>"
+                                
+                            var btn2 = document.getElementsByClassName("btnrooms");
+                            btn2[i].value=i+1
+                            
+                            
+    
+                            
+                                
+                        }
+                        for(var i = 0; i < roomsK.length; i++){
+                                btn2[i].onclick = function(){join_a_room(this)}
+                            }
+    
+                    }
+                    show_rooms();
+                }
+            }
+            http.send();
+        }
+        Getallrooms();
+    
+        
+    </script>
+    
+    </body>
+</html>
+    
