@@ -2,9 +2,7 @@ from flask import Flask, render_template, jsonify
 from flask_restful import Api, Resource, reqparse, abort
 import socket
 import threading
-import json
-
-clients=[]                  
+import json                
 
 app = Flask(__name__) 
 api = Api(app)
@@ -29,32 +27,22 @@ def accept_Sockets():
         data = clientsocket.recv(1024).decode()
         data = json.loads(data)
 
-        print(str(data))
+        
         clientsockets[data['user_id']] = clientsocket
-        #users[data['user_id']]['socket'] = clientsocket
-        #clients.append(clientsocket)    #adds a client
-
+        
 def broadcast(room_id):
     global clientsockets
-    for user_id in rooms[int(room_id)]['users'].keys():
-        #if users[rooms[int(room_id)]['users'][int(user_id)]["user_id"]]['socket'] != None:
-        #    users[rooms[int(room_id)]['users'][int(user_id)]["user_id"]]['socket'].send(room_id.encode())
-        #print("---------------------------------------------")
-        #print(clientsockets.keys())
-        #print(user_id)
-        #print(user_id in clientsockets.keys())
-        #print("---------------------------------------------")
-        if user_id in clientsockets.keys():
-            #data = {}
-            #data = {"room_id": room_id}
-            #data = json.dumps(data)
-            clientsockets[user_id].send("{};".format(room_id).encode()) # ; is delimeter in case more than message get received in one recv call
+    for userK in rooms[int(room_id)]['users'].keys():
+        if rooms[int(room_id)]['users'][userK]['user_id'] in clientsockets.keys():
+            # ; is delimeter in case more than message get received in one recv call
+            clientsockets[rooms[int(room_id)]['users'][userK]['user_id']].send("{};".format(room_id).encode()) 
 accept_socket_thread = threading.Thread(target=accept_Sockets)
 
         
 
 #user endpoints
-def abort_if_user_not_exist(user_id):# in case a the delete request attempts to delete a empty index
+def abort_if_user_not_exist(user_id):
+    # in case a the delete request attempts to delete a empty index
     found = False
     for ids in users.keys():
         if user_id == ids:
@@ -73,24 +61,6 @@ api.add_resource(Users, "/api/users")
 class User(Resource):
     def get(self, user_id):
         return users[user_id]
-
-    def post(self, user_id=None):# Auto increments id 
-        global counter_users
-        counter_users += 1     
-        parser = reqparse.RequestParser()
-        parser.add_argument("name")
-        
-        data = parser.parse_args()
-        
-        #is id needed?
-        self.user_id = counter_users
-        self.name = data['name']
-        #self.socket = None # The socket of the client will not be none if they have push notification
-        users[counter_users] = self.__dict__
-
-        
-        
-        return self.__dict__
     
     def delete(self, user_id):
         abort_if_user_not_exist(user_id)
@@ -99,12 +69,12 @@ class User(Resource):
 
 #endpoint for a specific user for post without userid needed
 class UserP(Resource):
-    def post(self):#auto increments id 
+    def post(self):
+        #auto increments id 
         global counter_users
 
-        #accept_socket_thread.start()
-        #print(accept_socket_thread.is_alive())
         if accept_socket_thread.is_alive() == False:
+            #a delayed start for the accept_sockets thread
             accept_socket_thread.start()
              
 
@@ -114,7 +84,7 @@ class UserP(Resource):
         
         self.user_id = counter_users
         self.name = data['name']
-        #self.socket = None # The socket of the client will not be none if they have push notification
+        
         users[counter_users] = self.__dict__
         counter_users += 1
 
@@ -234,8 +204,6 @@ class Room_messages_specified(Resource):
     
     def post(self, room_id, user_id):
         parser = reqparse.RequestParser()
-        #parser.add_argument("user_id")
-        #parser.add_argument("username")
         parser.add_argument("message")
         data = parser.parse_args()
 
@@ -247,7 +215,7 @@ class Room_messages_specified(Resource):
 
         rooms[int(room_id)]['messages'][len(rooms[int(room_id)]['messages'])] = message
 
-        #should broadcast to users with pushnotification
+        #should broadcast to users with push notifications
         broadcast(room_id)
         return 200
 
@@ -266,10 +234,7 @@ def select_a_room(userid, name):
 def start_chatbox(userid, name, roomid):
     return render_template("chatbots.html")
 
-if __name__ == "__main__":
-    #accept_socket_thread.daemon = True
-    #accept_socket_thread.start()
-    
+if __name__ == "__main__":   
     app.run(debug=True)
 
 
