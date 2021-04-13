@@ -60,6 +60,7 @@ api.add_resource(Users, "/api/users")
 #endpoint for a specific user
 class User(Resource):
     def get(self, user_id):
+        abort_if_user_not_exist(user_id)
         return users[user_id]
     
     def delete(self, user_id):
