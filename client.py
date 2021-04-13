@@ -87,9 +87,9 @@ def Jarvis(action):
                 if action['has_farewells']:
                     message += ", see you later?" #greeting and farewell in the same sentence
             elif action['activity'] == "transform":
-                message += "I dont think have the capabilities for that."
+                message += "I dont think I have the capabilities for that."
             else:
-                message += " {}, sounds ok😐".format(action['activity']+"ing")
+                message += " {}, sounds fun😏".format(action['activity']+"ing")
                 if action['has_farewells']:
                     message += ", huh goodbye?" #greeting and farewell in the same sentence
 
@@ -99,7 +99,7 @@ def Jarvis(action):
             message += " {} sounds like a great boss.".format(action['activity']+"ing")
         elif action['activity'] in bad_idea:
             message += " {}, doesn't sound like best course of action😟.".format(action['activity']+"ing")
-        elif action['activity'] == "transform":
+        elif action['activity'] == "transform:"
             message += "I dont think have the capabilities for that."
         else:
             message += " {}, sounds ok😐.".format(action['activity']+"ing")
@@ -175,7 +175,7 @@ def Prime(action):
             elif action['activity'] == "steal":
                     message += " Stealing? that's bad and pointless for me😠."
             elif action['activity'] == "transform":
-                    message += " Sure where to go 🤔 though."
+                    message += " Sure where to go though.🤔"
             else:
                 message += " {}, perhaps we can do it another time just not now.".format(action['activity']+"ing")
 
@@ -190,7 +190,7 @@ def Prime(action):
         elif action['activity'] == "steal":
             message += "Stealing? that's bad and pointless for me😠."
         elif action['activity'] == "transform":
-            message += "Sure where to go 🤔 though."
+            message += "Sure where to go though.🤔"
         else:
             message += "{}, perhaps we can do it another time just not now.".format(action['activity']+"ing")
 
@@ -212,7 +212,7 @@ def Parker(action):
         message = "Hi!"
         if action['activity'] in Activities:
             if action['activity'] in likes:
-                message += " {}, sounds interesting lets do it".format(action['activity']+"ing")
+                message += " {}, sounds interesting, lets do it".format(action['activity']+"ing")
                 if action['has_farewells']:
                     message += ", bye?" #greeting and farewell in the same sentence
             elif action['activity'] == "steal":
@@ -228,7 +228,7 @@ def Parker(action):
 
     elif action['activity'] in Activities:
         if action['activity'] in likes:
-            message += "{}, sounds interesting lets do it".format(action['activity']+"ing")
+            message += "{}, sounds interesting, lets do it".format(action['activity']+"ing")
             if action['has_farewells']:
                 message += ", bye?" #greeting and farewell in the same sentence
         elif action['activity'] == "steal":
