@@ -171,20 +171,18 @@ def Prime(action):
         if action['activity'] in Activities:
 
             if action['activity'] in likes:
-                message += "{}? Lets roll out.".format(action['activity']+"ing")
+                message += " {}? Lets roll out.".format(action['activity']+"ing")
             elif action['activity'] == "steal":
-                    message += "Stealing? that's bad and pointless for me😠."
+                    message += " Stealing? that's bad and pointless for me😠."
             elif action['activity'] == "transform":
-                    message += "Sure where to go 🤔 though."
+                    message += " Sure where to go 🤔 though."
             else:
-                message += "{}, perhaps we can do it another time just not now.".format(action['activity']+"ing")
+                message += " {}, perhaps we can do it another time just not now.".format(action['activity']+"ing")
 
 
-            message += "Sorry i am not capable of {} right now, maybe later".format(action['activity']+"ing")
+            
             if action['has_farewells']:
                 message += ", a greeting and a farewel in the same sentence 🤔?" #greeting and farewell in the same sentence
-        if action['has_farewells']:
-            message += " Wait 🤔" #greeting and farewell in the same sentence
 
     elif action['activity'] in Activities:
         if action['activity'] in likes:
