@@ -54,16 +54,36 @@ def abort_if_user_not_exist(user_id):
 #endpoint for getting all users
 class Users(Resource):
     def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("user_id")
+        data = parser.parse_args()
+
+        abort_if_user_not_exist(int(data['user_id']))
+
         return users
 api.add_resource(Users, "/api/users")
 
 #endpoint for a specific user
 class User(Resource):
     def get(self, user_id):
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("user_id")
+        data = parser.parse_args()
+
+        abort_if_user_not_exist(int(data['user_id']))
+
         abort_if_user_not_exist(user_id)
         return users[user_id]
     
     def delete(self, user_id):
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("user_id")
+        data = parser.parse_args()
+
+        abort_if_user_not_exist(int(data['user_id']))
+
         abort_if_user_not_exist(user_id)
         users.pop(user_id)
         return 200
@@ -112,6 +132,13 @@ def abort_if_room_not_exist(room_id):
 #get all chat rooms
 class Rooms(Resource):
     def get(self):
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("user_id")
+        data = parser.parse_args()
+
+        abort_if_user_not_exist(int(data['user_id']))
+
         data = jsonify(rooms)
         data.headers.add("Access-Control-Allow-Origin", "*")
         return data
@@ -120,6 +147,13 @@ api.add_resource(Rooms, "/api/rooms")
 #get a chatroom
 class Room(Resource):
     def get(self, room_id):
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("user_id")
+        data = parser.parse_args()
+
+        abort_if_user_not_exist(int(data['user_id']))
+
         abort_if_room_not_exist(room_id)
         return rooms[room_id]
 api.add_resource(Room, "/api/room/<int:room_id>")
@@ -146,6 +180,13 @@ api.add_resource(RoomP, "/api/room")
 #get all users in the room
 class Room_Users(Resource):
     def get(self, room_id):
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("user_id")
+        data = parser.parse_args()
+
+        abort_if_user_not_exist(int(data['user_id']))
+
         return rooms[room_id]['users']
 api.add_resource(Room_Users, "/api/room/<int:room_id>/users")
 
@@ -178,10 +219,11 @@ class Room_messages(Resource):
         parser.add_argument("user_id")
         data = parser.parse_args()
 
+        abort_if_user_not_exist(int(data['user_id']))
         abort_if_room_not_exist(room_id)
         
-        for user_id in rooms[room_id]['users'].keys():
-            if int(rooms[room_id]['users'][user_id]['user_id']) == int(data['user_id']):
+        for userK in rooms[room_id]['users'].keys():
+            if int(rooms[room_id]['users'][userK]['user_id']) == int(data['user_id']):
                 response = jsonify(rooms[room_id]['messages'])
                 response.headers.add("Access-Control-Allow-Origin", "*")
                 return response
@@ -193,32 +235,41 @@ api.add_resource(Room_messages, "/api/room/<int:room_id>/messages")
 class Room_messages_specified(Resource):
     def get(self, room_id, user_id):
 
-        parser = reqparse.RequestParser()
-        parser.add_argument("user_id")
-        data = parser.parse_args()
-        
-        for user in rooms[room_id]['users']:
-            if int(user) == int(data['user_id']):
-                return rooms[room_id]['messages']
+        abort_if_user_not_exist(user_id)
+
+        for userK in rooms[room_id]['users'].keys():
+            if int(rooms[room_id]['users'][userK]['user_id']) == int(user_id):
+                response = jsonify(rooms[room_id]['messages'])
+                response.headers.add("Access-Control-Allow-Origin", "*")
+                return response
 
         abort(404, message="the user is not a registered user in the room")
-    
+
     def post(self, room_id, user_id):
-        parser = reqparse.RequestParser()
-        parser.add_argument("message")
-        data = parser.parse_args()
+        abort_if_user_not_exist(user_id)
 
-        message = {
-            "user_id": user_id,
-            "username": users[int(user_id)]['name'],
-            "message": data['message']
-        }
+        for userK in rooms[room_id]['users'].keys():
+            if int(rooms[room_id]['users'][userK]['user_id']) == int(user_id):
 
-        rooms[int(room_id)]['messages'][len(rooms[int(room_id)]['messages'])] = message
+                parser = reqparse.RequestParser()
+                parser.add_argument("message")
+                data = parser.parse_args()
 
-        #should broadcast to users with push notifications
-        broadcast(room_id)
-        return 200
+                message = {
+                    "user_id": user_id,
+                    "username": users[int(user_id)]['name'],
+                    "message": data['message']
+                }
+
+                rooms[int(room_id)]['messages'][len(rooms[int(room_id)]['messages'])] = message
+
+
+
+                #should broadcast to users with push notifications
+                broadcast(room_id)
+                return 200
+        abort(404, message="the user is not a registered user in the room")
+        
 
 
 api.add_resource(Room_messages_specified, "/api/room/<int:room_id>/<int:user_id>/messages")

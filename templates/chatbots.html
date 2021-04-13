@@ -48,7 +48,7 @@
               if(this.readyState==4 && this.status == 200){
                 var messages=JSON.parse(this.responseText);
                 var messagesK = Object.keys(messages)
-                //console.log(messages);
+                console.log(messages);
                 var i = 0;
                 while(i<messagesK.length){
                   

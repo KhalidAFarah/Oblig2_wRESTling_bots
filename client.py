@@ -99,7 +99,7 @@ def Jarvis(action):
             message += " {} sounds like a great boss.".format(action['activity']+"ing")
         elif action['activity'] in bad_idea:
             message += " {}, doesn't sound like best course of action😟.".format(action['activity']+"ing")
-        elif action['activity'] == "transform:"
+        elif action['activity'] == "transform":
             message += "I dont think have the capabilities for that."
         else:
             message += " {}, sounds ok😐.".format(action['activity']+"ing")
@@ -177,7 +177,7 @@ def Prime(action):
             elif action['activity'] == "transform":
                     message += " Sure where to go though.🤔"
             else:
-                message += " {}, perhaps we can do it another time just not now.".format(action['activity']+"ing")
+                message += " {}, ill give it a maybe.".format(action['activity']+"ing")
 
 
             
@@ -192,7 +192,7 @@ def Prime(action):
         elif action['activity'] == "transform":
             message += "Sure where to go though.🤔"
         else:
-            message += "{}, perhaps we can do it another time just not now.".format(action['activity']+"ing")
+            message += "{}, ill give it a maybe.".format(action['activity']+"ing")
 
         if action['has_farewells']: # farewell and action in a message
             message += ", see you soon"
@@ -277,11 +277,11 @@ def send_message(message, room_id):
 def get_all_messages(room_id, ID):
     return send_GET_Request(base_url+ "/api/room/{}/messages".format(room_id), {"user_id": ID})
 
-def create_room():
-    return send_POST_Request(base_url + "/api/room")
+def create_room(ID):
+    return send_POST_Request(base_url + "/api/room", {"user_id": ID})
 
-def get_all_rooms():
-    return send_GET_Request(base_url + "/api/rooms")
+def get_all_rooms(ID):
+    return send_GET_Request(base_url + "/api/rooms", {"user_id": ID})
 
 def join_a_room(room_id, user_id):
     send_POST_Request(base_url+ "/api/room/{}/user".format(room_id), {"user_id": user_id})
@@ -329,10 +329,10 @@ def start_up():
     socket.send(user.encode()) 
     
     # create a room
-    create_room()
+    create_room(botID)
 
     #join the created rooms
-    response = get_all_rooms()
+    response = get_all_rooms(botID)
     for room_id in response.keys():
         join_a_room(room_id, botID)
         chatroom = {
@@ -359,8 +359,8 @@ def run():                  # Push notification
             
         # trying to handle overflow of data recievd
         for room_id in unique:
-            endpoint = base_url + "/api/room/{}/messages".format(int(room_id))
-            response = send_GET_Request(endpoint, {"user_id": botID})
+            endpoint = base_url + "/api/room/{}/{}/messages".format(int(room_id),int(botID))
+            response = send_GET_Request(endpoint)#, {"user_id": botID})
             print_new_messages(response, int(room_id))
         
 start_up()
