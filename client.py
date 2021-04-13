@@ -14,7 +14,7 @@ botID = -1
 
 bots=["Jarvis","Stark","Parker","Prime"]
 
-greetings_list=["hi","hello","hey","how are you", "howdy"]
+greetings_list=["hi","hello","hey", "howdy"]
 Activities=["read","run","train","work", "fight", "fish", "build", "help", "transform", "infiltrate", "steal"]
 exit_list=["exit","see you later","bye","quit", "good bye"]
 
