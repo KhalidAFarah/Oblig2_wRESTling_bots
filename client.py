@@ -96,7 +96,7 @@ def Jarvis(action):
 
     elif action['activity'] in Activities:
         if action['activity'] in good_idea:
-            message += " {} sounds like a great boss.".format(action['activity']+"ing")
+            message += " {} sounds like a great idea boss.".format(action['activity']+"ing")
         elif action['activity'] in bad_idea:
             message += " {}, doesn't sound like best course of action😟.".format(action['activity']+"ing")
         elif action['activity'] == "transform":
@@ -151,7 +151,7 @@ def Stark(action):
             elif action['activity'] == "transform":
                     message += "What are you saying?"
             else:
-                message += "{}, perhaps we can do it another time just not now.".format(action['activity']+"ing")
+                message += "{}?, perhaps we can do it another time just not now.".format(action['activity']+"ing")
         if action['has_farewells']: # farewell and action in a message
             message += " Chat with you later."
 
@@ -175,9 +175,9 @@ def Prime(action):
             elif action['activity'] == "steal":
                     message += " Stealing? that's bad and pointless for me😠."
             elif action['activity'] == "transform":
-                    message += " Sure where to go though.🤔"
+                    message += " Sure, where to go though.🤔"
             else:
-                message += " {}, ill give it a maybe.".format(action['activity']+"ing")
+                message += " {}, will give it a try maybe.".format(action['activity']+"ing")
 
 
             
@@ -192,7 +192,7 @@ def Prime(action):
         elif action['activity'] == "transform":
             message += "Sure where to go though.🤔"
         else:
-            message += "{}, ill give it a maybe.".format(action['activity']+"ing")
+            message += "{}, will give it a try maybe.".format(action['activity']+"ing")
 
         if action['has_farewells']: # farewell and action in a message
             message += ", see you soon"
